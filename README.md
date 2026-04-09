@@ -104,6 +104,12 @@ rag-langchain-qwen/
 git clone https://github.com/alexey10/rag-langchain-qwen.git
 cd rag-langchain-qwen
 ```
+## 🔐 Environment Variables
+
+Create a `.env` file in the root directory:
+LANGCHAIN_API_KEY=your_key
+HF_TOKEN=your_token
+OPENAI_API_KEY=your_key
 
 ---
 
