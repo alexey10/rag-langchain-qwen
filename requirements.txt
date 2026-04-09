@@ -1,0 +1,8 @@
+langchain
+langchain-community
+langchain-core
+chromadb
+sentence-transformers
+ollama
+pypdf
+packaging>=23.2,<24.0
