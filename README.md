@@ -12,6 +12,7 @@ This project demonstrates how to build a **production-style RAG pipeline** using
 * **Embeddings**: BGE (`bge-large-en`)
 * **Vector Store**: Chroma
 * **Orchestration**: LangChain
+* **Observability**: LangSmith
 
 The system ingests documents, indexes them into a vector database, retrieves relevant context at query time, and generates grounded responses using an LLM.
 
