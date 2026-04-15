@@ -15,9 +15,6 @@ os.getenv("LANGCHAIN_API_KEY")
 from langsmith import traceable
 
 @traceable(name="rag_query")
-from langsmith import traceable
-
-@traceable(name="rag_query")
 def run_query(query, sources=None):
     return qa_chain.invoke(
         query,
