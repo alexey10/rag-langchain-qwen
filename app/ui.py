@@ -1,36 +1,40 @@
 import sys
 import os
 import time
+import logging
 import streamlit as st
-
-os.environ["LANGCHAIN_TRACING_V2"] = "true"
-os.environ["LANGCHAIN_PROJECT"] = "rag-demo"
-
 from dotenv import load_dotenv
 
+# -------------------------------
+# Load environment variables
+# -------------------------------
 load_dotenv()
 
-os.getenv("LANGCHAIN_API_KEY")
+# LangSmith config (MUST be before LangChain usage)
+os.environ["LANGCHAIN_TRACING_V2"] = "true"
+os.environ["LANGCHAIN_PROJECT"] = os.getenv("LANGCHAIN_PROJECT", "rag-demo")
 
-from langsmith import traceable
+if not os.getenv("LANGCHAIN_API_KEY"):
+    raise ValueError("Missing LANGCHAIN_API_KEY in environment")
 
-@traceable(name="rag_query")
-def run_query(query, sources=None):
-    return qa_chain.invoke(
-        query,
-        config={
-            "metadata": {
-                "query_length": len(query),
-                "app": "rag-demo",
-                "retriever": "chroma",
-                "num_sources": len(sources) if sources else 0,
-            }
-        }
-    )
+# -------------------------------
+# Local logging (file-based)
+# -------------------------------
+logging.basicConfig(
+    filename="rag_traces.log",
+    level=logging.INFO,
+    format="%(asctime)s - %(message)s",
+)
 
+# -------------------------------
 # Fix import path
+# -------------------------------
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 
+# -------------------------------
+# Imports
+# -------------------------------
+from langsmith import traceable
 from app.retrieval.retriever import get_retriever
 from app.chains.rag_chain import build_rag_chain
 from app.ingestion.ingest import run_ingestion
@@ -41,10 +45,10 @@ from app.ingestion.ingest import run_ingestion
 st.set_page_config(page_title="RAG Demo", layout="wide")
 
 st.title("🧠 RAG Demo (LangChain + Qwen)")
-st.markdown("Ask questions about your documents (RAG-powered)")
+st.markdown("Ask questions about your documents (Agentic-ready RAG)")
 
 # -------------------------------
-# Initialize session state
+# Session state
 # -------------------------------
 if "messages" not in st.session_state:
     st.session_state.messages = []
@@ -56,17 +60,79 @@ if "latency" not in st.session_state:
     st.session_state.latency = 0
 
 # -------------------------------
-# Load RAG chain (cached)
+# Load components
 # -------------------------------
 @st.cache_resource
-def load_chain():
+def load_components():
     retriever = get_retriever()
-    return build_rag_chain(retriever)
+    chain = build_rag_chain(retriever)
+    return retriever, chain
 
-qa_chain = load_chain()
+retriever, qa_chain = load_components()
 
 # -------------------------------
-# Sidebar (controls)
+# 🔍 Retrieval step (traced)
+# -------------------------------
+@traceable(name="retrieval_step")
+def retrieve_docs(query):
+    docs = retriever.get_relevant_documents(query)
+
+    # Local logging
+    sources = [doc.metadata.get("source", "unknown") for doc in docs]
+    logging.info(f"[RETRIEVAL] Query: {query}")
+    logging.info(f"[RETRIEVAL] Sources: {sources}")
+
+    return docs
+
+# -------------------------------
+# 🧠 Generation step (traced)
+# -------------------------------
+@traceable(name="generation_step")
+def generate_answer(query, docs):
+    context = "\n\n".join([doc.page_content for doc in docs])
+
+    prompt = f"""
+Answer the question based only on the context below.
+
+Context:
+{context}
+
+Question:
+{query}
+"""
+
+    answer = qa_chain.invoke(prompt)
+
+    # Local logging
+    logging.info(f"[GENERATION] Answer: {str(answer)[:200]}")
+
+    return answer
+
+# -------------------------------
+# 🚀 Full RAG pipeline (traced)
+# -------------------------------
+@traceable(name="rag_query")
+def run_query(query):
+    start_time = time.time()
+
+    docs = retrieve_docs(query)
+    answer = generate_answer(query, docs)
+
+    latency = round(time.time() - start_time, 2)
+
+    # Attach metadata to trace
+    return {
+        "result": answer,
+        "source_documents": docs,
+        "metadata": {
+            "latency": latency,
+            "query_length": len(query),
+            "num_docs": len(docs),
+        },
+    }
+
+# -------------------------------
+# Sidebar
 # -------------------------------
 with st.sidebar:
     st.header("⚙️ Controls")
@@ -79,36 +145,31 @@ with st.sidebar:
     if st.button("🧹 Clear Chat"):
         st.session_state.messages = []
         st.session_state.sources = []
+        st.session_state.latency = 0
         st.success("Chat cleared")
 
 # -------------------------------
-# Chat UI
+# Chat input
 # -------------------------------
 user_input = st.chat_input("Ask a question about your documents...")
 
 if user_input:
-    # Add user message
     st.session_state.messages.append({"role": "user", "content": user_input})
 
     with st.spinner("Thinking..."):
         start = time.time()
 
-        result = qa_chain(user_input)
+        result = run_query(user_input)
 
         end = time.time()
 
-        # Handle both chain types
-        if isinstance(result, dict):
-            answer = result.get("result", "")
-            sources = result.get("source_documents", [])
-        else:
-            answer = result
-            sources = []
+        answer = result.get("result", "")
+        sources = result.get("source_documents", [])
 
-        # Save to session state
         st.session_state.messages.append(
             {"role": "assistant", "content": answer}
         )
+
         st.session_state.sources = sources
         st.session_state.latency = round(end - start, 2)
 
@@ -119,13 +180,13 @@ for msg in st.session_state.messages:
     st.chat_message(msg["role"]).write(msg["content"])
 
 # -------------------------------
-# Metrics
+# Latency
 # -------------------------------
 if st.session_state.latency:
     st.caption(f"⏱️ Response time: {st.session_state.latency}s")
 
 # -------------------------------
-# Sources (clean UI)
+# Sources display
 # -------------------------------
 if st.session_state.sources:
     st.subheader("📚 Sources")
