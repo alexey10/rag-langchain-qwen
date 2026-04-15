@@ -15,8 +15,21 @@ os.getenv("LANGCHAIN_API_KEY")
 from langsmith import traceable
 
 @traceable(name="rag_query")
-def run_query(query):
-    return qa_chain.invoke(query)
+from langsmith import traceable
+
+@traceable(name="rag_query")
+def run_query(query, sources=None):
+    return qa_chain.invoke(
+        query,
+        config={
+            "metadata": {
+                "query_length": len(query),
+                "app": "rag-demo",
+                "retriever": "chroma",
+                "num_sources": len(sources) if sources else 0,
+            }
+        }
+    )
 
 # Fix import path
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
