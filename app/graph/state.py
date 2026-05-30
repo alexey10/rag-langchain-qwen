@@ -1,0 +1,8 @@
+from typing import TypedDict, List
+from langchain_core.documents import Document
+
+class RAGState(TypedDict):
+    question: str
+    documents: List[Document]
+    answer: str
+    validation: str
