@@ -3,15 +3,17 @@
 from langsmith import traceable
 
 from app.retrieval.retriever import get_retriever
-from app.chains.rag_chain import build_rag_chain
+from app.llm.qwen_llm import get_llm
 
 retriever = get_retriever()
-qa_chain = build_rag_chain(retriever)
+llm = get_llm()
+
 
 #Retrieval Node
 
 @traceable(name="retrieve")
 def retrieve(state):
+
     docs = retriever.get_relevant_documents(
         state["question"]
     )
@@ -25,11 +27,9 @@ def retrieve(state):
 @traceable(name="generate")
 def generate(state):
 
-    docs = state["documents"]
-
     context = "\n\n".join(
         doc.page_content
-        for doc in docs
+        for doc in state["documents"]
     )
 
     prompt = f"""
@@ -39,14 +39,15 @@ Context:
 {context}
 
 Question:
-{state['question']}
+{state["question"]}
 """
 
-    answer = qa_chain.invoke(prompt)
+    answer = llm.invoke(prompt)
 
     return {
         "answer": answer
     }
+
 
 #Validation Node
 
@@ -55,11 +56,11 @@ def validate(state):
 
     answer = state["answer"]
 
-    if len(answer) < 20:
-        validation = "RETRY"
-    else:
-        validation = "PASS"
+    if len(answer.strip()) < 20:
+        return {
+            "validation": "RETRY"
+        }
 
     return {
-        "validation": validation
+        "validation": "PASS"
     }
