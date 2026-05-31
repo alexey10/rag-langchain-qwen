@@ -4,6 +4,7 @@ import time
 import logging
 import streamlit as st
 from dotenv import load_dotenv
+from app.graph.rag_graph import rag_graph
 
 # -------------------------------
 # Load environment variables
