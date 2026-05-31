@@ -160,19 +160,41 @@ if user_input:
     with st.spinner("Thinking..."):
         start = time.time()
 
-        result = run_query(user_input)
+	
+	# -------------------------------
+# Chat input
+# -------------------------------
+user_input = st.chat_input("Ask a question about your documents...")
+
+if user_input:
+    st.session_state.messages.append(
+        {"role": "user", "content": user_input}
+    )
+
+    with st.spinner("Thinking..."):
+        start = time.time()
+
+        result = rag_graph.invoke(
+            {
+                "question": user_input
+            }
+        )
 
         end = time.time()
 
-        answer = result.get("result", "")
-        sources = result.get("source_documents", [])
+        answer = result.get("answer", "")
+        sources = result.get("documents", [])
 
         st.session_state.messages.append(
-            {"role": "assistant", "content": answer}
+            {
+                "role": "assistant",
+                "content": answer,
+            }
         )
 
         st.session_state.sources = sources
         st.session_state.latency = round(end - start, 2)
+
 
 # -------------------------------
 # Render chat
