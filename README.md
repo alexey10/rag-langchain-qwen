@@ -212,11 +212,16 @@ This helps diagnose:
 
 ## 📈 Future Improvements
 
-🔹 Query rewriting and retrieval retry loops
-🔹 LLM-based answer validation
-🔹 Hallucination detection and grounding checks
-🔹 Dynamic routing between retrieval strategies
-🔹 Tool-using agents (search, calculator, APIs)
+## Next Iteration
+
+*🔹 Hybrid Search (Vector + BM25)
+*🔹 Query Rewriting and Retrieval Retry
+*🔹 LLM-based Answer Validation
+*🔹 Hallucination Detection
+*🔹 Multi-document Reasoning
+*🔹 RAG Evaluation with RAGAS
+*🔹 FastAPI Inference Service
+*🔹 Hugging Face Deployment
 
 ---
 
