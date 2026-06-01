@@ -214,14 +214,14 @@ This helps diagnose:
 
 ## Next Iteration
 
-🔹 Hybrid Search (Vector + BM25)
-🔹 Query Rewriting and Retrieval Retry
-🔹 LLM-based Answer Validation
-🔹 Hallucination Detection
-🔹 Multi-document Reasoning
-🔹 RAG Evaluation with RAGAS
-🔹 FastAPI Inference Service
-🔹 Hugging Face Deployment
+* 🔹 Hybrid Search (Vector + BM25)
+* 🔹 Query Rewriting and Retrieval Retry
+* 🔹 LLM-based Answer Validation
+* 🔹 Hallucination Detection
+* 🔹 Multi-document Reasoning
+* 🔹 RAG Evaluation with RAGAS
+* 🔹 FastAPI Inference Service
+* 🔹 Hugging Face Deployment
 
 ---
 
