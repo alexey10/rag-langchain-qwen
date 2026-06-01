@@ -11,5 +11,5 @@ def run_ingestion():
     embedding = get_embedding_model()
     vectorstore = create_vectorstore(chunks, embedding)
 
-    vectorstore.persist()
+     
     print("✅ Ingestion complete")

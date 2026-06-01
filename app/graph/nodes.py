@@ -14,9 +14,7 @@ llm = get_llm()
 @traceable(name="retrieve")
 def retrieve(state):
 
-    docs = retriever.get_relevant_documents(
-        state["question"]
-    )
+    docs = retriever.invoke(state["question"])
 
     return {
         "documents": docs

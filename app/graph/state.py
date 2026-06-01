@@ -6,3 +6,5 @@ class RAGState(TypedDict):
     documents: List[Document]
     answer: str
     validation: str
+    retries: int
+    rewritten_question: str
