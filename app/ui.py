@@ -47,9 +47,9 @@ logging.basicConfig(
 # -------------------------------
 # Page config
 # -------------------------------
-st.set_page_config(page_title="RAG Demo", layout="wide")
+st.set_page_config(page_title="Agentic Knowledge Assistant", layout="wide")
 
-st.title("🧠 RAG Demo (LangChain + Qwen)")
+st.title("🧠 Agentic Knowledge Assistant (LangChain + Qwen)")
 st.markdown("Ask questions about your documents (Agentic-ready RAG)")
 
 # -------------------------------
