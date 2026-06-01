@@ -199,13 +199,24 @@ This helps diagnose:
 
 ---
 
+## Current Status
+| Item                                  | Status          |
+| ------------------------------------- | --------------- |
+| Basic RAG (Qwen + Chroma + LangChain) | ✅ Complete      |
+| Streamlit UI                          | ✅ Complete      |
+| LangSmith Observability               | ✅ Complete      |
+| LangGraph for Agentic RAG             | ✅ Complete (v1) |
+| Local Deployment                      | ✅ Complete      |
+| GitHub Portfolio Project              | ✅ Complete      |
+
+
 ## 📈 Future Improvements
 
-* 🔹 Hybrid search (vector + keyword)
-* 🔹 LangGraph for multi-step / agentic RAG
-* 🔹 Evaluation (RAGAS / TruLens)
-* 🔹 FastAPI service with streaming responses
-* 🔹 Multi-document reasoning workflows
+🔹 Query rewriting and retrieval retry loops
+🔹 LLM-based answer validation
+🔹 Hallucination detection and grounding checks
+🔹 Dynamic routing between retrieval strategies
+🔹 Tool-using agents (search, calculator, APIs)
 
 ---
 
