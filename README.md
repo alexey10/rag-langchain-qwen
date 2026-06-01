@@ -1,4 +1,4 @@
-# 🚀 Production-Ready RAG System with LangChain, Qwen & Chroma
+# 🚀 Production-Ready RAG System with LangChain,LangGraph,LangSmith,Qwen & Chroma
 
 A modular, local-first Retrieval-Augmented Generation (RAG) system designed for high-quality question answering over private documents. Built with a focus on **scalability, observability, and real-world deployment patterns**.
 
