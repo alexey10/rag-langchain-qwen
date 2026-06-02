@@ -38,11 +38,6 @@ logging.basicConfig(
     format="%(asctime)s - %(message)s",
 )
 
-# -------------------------------
-# Fix import path
-# -------------------------------
-#sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
-
 
 # -------------------------------
 # Page config
@@ -67,6 +62,8 @@ if "latency" not in st.session_state:
 if "validation" not in st.session_state:
     st.session_state.validation = ""
 
+if "rewritten_question" not in st.session_state:
+    st.session_state.rewritten_question = ""
 
 # -------------------------------
 # Sidebar
@@ -123,6 +120,11 @@ if user_input:
                 "UNKNOWN"
             )
 
+            rewritten_question = result.get(
+                "rewritten_question",
+                ""
+            )
+
         except Exception as e:
 
             st.error(f"Graph execution failed: {e}")
@@ -131,9 +133,9 @@ if user_input:
             answer = "An error occurred while processing your request."
             sources = []
             validation = "ERROR"
+            rewritten_question = ""
 
         end = time.time()
-
         st.session_state.messages.append(
             {
                 "role": "assistant",
@@ -144,6 +146,8 @@ if user_input:
         st.session_state.sources = sources
 
         st.session_state.validation = validation
+
+        st.session_state.rewritten_question = rewritten_question
 
         st.session_state.latency = round(
             end - start,
@@ -161,6 +165,16 @@ for msg in st.session_state.messages:
 if st.session_state.latency:
     st.caption(f"⏱️ Response time: {st.session_state.latency}s")
 
+# -------------------------------
+# Rewrite
+# -------------------------------
+
+if st.session_state.get("rewritten_question"):
+
+    st.info(
+        f"🔍 Search Query: "
+        f"{st.session_state.rewritten_question}"
+    )
 
 #
 # -------------------------------
