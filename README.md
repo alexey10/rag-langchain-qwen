@@ -209,6 +209,13 @@ This helps diagnose:
 | Local Deployment                      | ✅ Complete      |
 | GitHub Portfolio Project              | ✅ Complete      |
 
+| Level           | Capability                               |
+| --------------- | ---------------------------------------- |
+| Traditional RAG | Retrieve → Generate                      |
+| Agentic RAG v1  | Rewrite → Retrieve → Generate → Validate |
+| Agentic RAG v2  | Retry on failed validation               |
+| Agentic RAG v3  | Multiple retrieval strategies            |
+| Agentic RAG v4  | Tool calling + planning                  |
 
 ## 📈 Future Improvements
 
