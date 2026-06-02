@@ -1,5 +1,4 @@
 
-
 from langsmith import traceable
 
 from app.retrieval.retriever import get_retriever
@@ -11,10 +10,14 @@ llm = get_llm()
 
 #Retrieval Node
 
-@traceable(name="retrieve")
 def retrieve(state):
 
-    docs = retriever.invoke(state["question"])
+    query = state.get(
+    "rewritten_question",
+    state["question"]
+	)
+
+    docs = retriever.invoke(query)
 
     return {
         "documents": docs
@@ -22,7 +25,6 @@ def retrieve(state):
 
 #Generation Node
 
-@traceable(name="generate")
 def generate(state):
 
     context = "\n\n".join(
@@ -49,7 +51,6 @@ Question:
 
 #Validation Node
 
-@traceable(name="validate")
 def validate(state):
 
     answer = state["answer"]
@@ -61,4 +62,23 @@ def validate(state):
 
     return {
         "validation": "PASS"
+    }
+
+#Rewrite Query
+def rewrite_query(state):
+
+    prompt = f"""
+Rewrite the following user question to improve
+document retrieval.
+
+Return only the rewritten query.
+
+Question:
+{state["question"]}
+"""
+
+    rewritten = llm.invoke(prompt)
+
+    return {
+        "rewritten_question": rewritten.strip()
     }
