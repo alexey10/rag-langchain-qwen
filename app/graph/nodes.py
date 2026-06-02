@@ -53,15 +53,49 @@ Question:
 
 def validate(state):
 
-    answer = state["answer"]
+    context = "\n\n".join(
+        doc.page_content
+        for doc in state["documents"]
+    )
 
-    if len(answer.strip()) < 20:
+    prompt = f"""
+You are evaluating a RAG response.
+
+Question:
+{state["question"]}
+
+Retrieved Context:
+{context}
+
+Answer:
+{state["answer"]}
+
+Determine:
+
+1. Is the answer supported by the context?
+2. Is it relevant to the question?
+3. Is it reasonably complete?
+
+Respond ONLY with:
+
+PASS
+
+or
+
+RETRY
+"""
+
+    verdict = llm.invoke(prompt).strip()
+
+    if "PASS" in verdict.upper():
         return {
-            "validation": "RETRY"
+            "validation": "PASS",
+            "validation_reason": verdict,
         }
 
     return {
-        "validation": "PASS"
+        "validation": "RETRY",
+        "validation_reason": verdict,
     }
 
 #Rewrite Query

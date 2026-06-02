@@ -3,8 +3,8 @@ from langchain_core.documents import Document
 
 class RAGState(TypedDict):
     question: str
+    rewritten_question: str
     documents: List[Document]
     answer: str
     validation: str
-    retries: int
-    rewritten_question: str
+    validation_reason: str

@@ -64,6 +64,8 @@ if "sources" not in st.session_state:
 if "latency" not in st.session_state:
     st.session_state.latency = 0
 
+if "validation" not in st.session_state:
+    st.session_state.validation = ""
 
 
 # -------------------------------
@@ -116,6 +118,11 @@ if user_input:
             answer = result.get("answer", "")
             sources = result.get("documents", [])
 
+            validation = result.get(
+                "validation",
+                "UNKNOWN"
+            )
+
         except Exception as e:
 
             st.error(f"Graph execution failed: {e}")
@@ -123,6 +130,7 @@ if user_input:
 
             answer = "An error occurred while processing your request."
             sources = []
+            validation = "ERROR"
 
         end = time.time()
 
@@ -135,11 +143,12 @@ if user_input:
 
         st.session_state.sources = sources
 
+        st.session_state.validation = validation
+
         st.session_state.latency = round(
             end - start,
             2
         )
-
 # -------------------------------
 # Render chat
 # -------------------------------
@@ -151,6 +160,19 @@ for msg in st.session_state.messages:
 # -------------------------------
 if st.session_state.latency:
     st.caption(f"⏱️ Response time: {st.session_state.latency}s")
+
+
+#
+# -------------------------------
+# Validation Status
+# -------------------------------
+if st.session_state.validation:
+
+    if st.session_state.validation == "PASS":
+        st.success("✅ Validation Passed")
+
+    elif st.session_state.validation == "RETRY":
+        st.warning("⚠️ Validation Requested Retry")
 
 # -------------------------------
 # Sources display
