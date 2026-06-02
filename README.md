@@ -1,4 +1,4 @@
-# 🚀 Production-Ready RAG System with LangChain,LangGraph,LangSmith,Qwen & Chroma
+# 🚀 Agentic RAG system built with LangGraph, LangSmith, ChromaDB, and Qwen featuring query rewriting, retrieval, answer generation, and LLM-based validation.
 
 A modular, local-first Retrieval-Augmented Generation (RAG) system designed for high-quality question answering over private documents. Built with a focus on **scalability, observability, and real-world deployment patterns**.
 
