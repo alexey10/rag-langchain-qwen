@@ -324,7 +324,7 @@ PASS
 
 ## 👤 Author
 
-**Alexey Piskovatskov**
+Built by **Alexey Piskovatskov**
 
 Focus areas:
 - AI Systems
