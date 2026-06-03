@@ -20,56 +20,49 @@ The system ingests documents, indexes them into a vector database, retrieves rel
 
 ## 🏗️ Architecture
 
+```text
+Documents
+   │
+   ▼
+Chunking
+   │
+   ▼
+Embeddings
+   │
+   ▼
+ChromaDB
 
-                    ┌────────────────────┐
-                    │ Source Documents   │
-                    └─────────┬──────────┘
-                              │
-                              ▼
-                    ┌────────────────────┐
-                    │ Document Chunking  │
-                    └─────────┬──────────┘
-                              │
-                              ▼
-                    ┌────────────────────┐
-                    │ Embeddings Model   │
-                    │ (HuggingFace)      │
-                    └─────────┬──────────┘
-                              │
-                              ▼
-                    ┌────────────────────┐
-                    │ Chroma Vector DB   │
-                    └─────────┬──────────┘
-                              │
+Question
+   │
+   ▼
+Rewrite Query
+   │
+   ▼
+Retrieve
+   │
+   ▼
+Generate
+   │
+   ▼
+Validate
+   │
+   ▼
+Answer
+```
+## User Flow
 
-User Question
-      │
-      ▼
-┌────────────────────┐
-│ Query Rewrite Node │
-└─────────┬──────────┘
-          │
-          ▼
-┌────────────────────┐
-│ Retrieval Node     │
-│ (Top-K Search)     │
-└─────────┬──────────┘
-          │
-          ▼
-┌────────────────────┐
-│ Generation Node    │
-│ (Qwen via Ollama)  │
-└─────────┬──────────┘
-          │
-          ▼
-┌────────────────────┐
-│ Validation Node    │
-│ (LLM Evaluation)   │
-└─────────┬──────────┘
-          │
-          ▼
-        Answer
+1. User submits a question
+2. Query Rewrite node optimizes the search query
+3. Retriever searches ChromaDB for relevant chunks
+4. Qwen generates an answer using retrieved context
+5. Validation node evaluates answer quality
+6. Final answer is returned to the user
 
+Observability:
+- LangSmith tracing
+- Local logging
+- Retrieved context inspection
+```
 ---
 
 ## ⚙️ Key Features
