@@ -20,14 +20,62 @@ The system ingests documents, indexes them into a vector database, retrieves rel
 
 ## 🏗️ Architecture
 
-```
-Documents → Chunking → Embeddings → Vector Store (Chroma)
-                                      ↓
-User Query → Retriever → (Optional Reranker) → Prompt → LLM (Qwen3)
-                                                              ↓
-                                                           Answer
-```
+...
 
+                    ┌────────────────────┐
+                    │ Source Documents   │
+                    └─────────┬──────────┘
+                              │
+                              ▼
+                    ┌────────────────────┐
+                    │ Document Chunking  │
+                    └─────────┬──────────┘
+                              │
+                              ▼
+                    ┌────────────────────┐
+                    │ Embeddings Model   │
+                    │ (HuggingFace)      │
+                    └─────────┬──────────┘
+                              │
+                              ▼
+                    ┌────────────────────┐
+                    │ Chroma Vector DB   │
+                    └─────────┬──────────┘
+                              │
+
+User Question
+      │
+      ▼
+┌────────────────────┐
+│ Query Rewrite Node │
+└─────────┬──────────┘
+          │
+          ▼
+┌────────────────────┐
+│ Retrieval Node     │
+│ (Top-K Search)     │
+└─────────┬──────────┘
+          │
+          ▼
+┌────────────────────┐
+│ Generation Node    │
+│ (Qwen via Ollama)  │
+└─────────┬──────────┘
+          │
+          ▼
+┌────────────────────┐
+│ Validation Node    │
+│ (LLM Evaluation)   │
+└─────────┬──────────┘
+          │
+          ▼
+        Answer
+
+Observability:
+• LangSmith tracing
+• Local trace logging
+• Retrieved context inspection
+...
 ---
 
 ## ⚙️ Key Features
