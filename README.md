@@ -20,7 +20,6 @@ The system ingests documents, indexes them into a vector database, retrieves rel
 
 ## 🏗️ Architecture
 
-...
 
                     ┌────────────────────┐
                     │ Source Documents   │
@@ -71,11 +70,6 @@ User Question
           ▼
         Answer
 
-Observability:
-• LangSmith tracing
-• Local trace logging
-• Retrieved context inspection
-...
 ---
 
 ## ⚙️ Key Features
