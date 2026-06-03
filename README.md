@@ -1,4 +1,4 @@
-# 🚀 Agentic RAG system built with LangGraph, LangSmith, ChromaDB, and Qwen featuring query rewriting, retrieval, answer generation, and LLM-based validation.
+# 🚀 Agentic RAG System with LangGraph, LangSmith, ChromaDB, and Qwen
 
 A modular, local-first Retrieval-Augmented Generation (RAG) system designed for high-quality question answering over private documents. Built with a focus on **scalability, observability, and real-world deployment patterns**.
 
@@ -6,15 +6,18 @@ A modular, local-first Retrieval-Augmented Generation (RAG) system designed for 
 
 ## 🧠 Overview
 
-This project demonstrates how to build a **production-style RAG pipeline** using open-source components:
+This project demonstrates how to build a production-style **Agentic RAG** system using open-source components.
 
-* **LLM**: Qwen3 (via Ollama)
-* **Embeddings**: BGE (`bge-large-en`)
-* **Vector Store**: Chroma
-* **Orchestration**: LangChain
-* **Observability**: LangSmith
+### Technology Stack
 
-The system ingests documents, indexes them into a vector database, retrieves relevant context at query time, and generates grounded responses using an LLM.
+- **LLM:** Qwen3 (via Ollama)
+- **Embeddings:** BGE (`bge-large-en`)
+- **Vector Store:** ChromaDB
+- **Agent Framework:** LangGraph
+- **Observability:** LangSmith
+- **UI:** Streamlit
+
+The system ingests documents, indexes them into a vector database, rewrites user queries for improved retrieval, generates grounded responses, and validates answers before returning them to the user.
 
 ---
 
@@ -49,7 +52,10 @@ Validate
    ▼
 Answer
 ```
-## User Flow
+
+---
+
+## 👤 User Flow
 
 1. User submits a question
 2. Query Rewrite node optimizes the search query
@@ -58,108 +64,100 @@ Answer
 5. Validation node evaluates answer quality
 6. Final answer is returned to the user
 
-Observability:
+### Observability
+
 - LangSmith tracing
 - Local logging
 - Retrieved context inspection
-```
+
 ---
 
 ## ⚙️ Key Features
 
+### ✅ Agentic RAG Workflow
+
+- Query rewriting for improved retrieval quality
+- Semantic retrieval using ChromaDB
+- Grounded answer generation using Qwen
+- LLM-based answer validation
+
 ### ✅ Modular Design
 
-* Clean separation of concerns:
-
-  * ingestion
-  * embeddings
-  * retrieval
-  * generation
-* Easy to extend or swap components (LLM, vector DB, etc.)
-
----
-
-### ✅ Retrieval-First Architecture
-
-* Focus on **retrieval quality over model size**
-* Configurable chunking strategy (size + overlap)
-* Supports metadata filtering and extensibility
-
----
+- Clean separation of concerns
+- Easy component replacement
+- Extensible architecture
 
 ### ✅ Local-First & Privacy-Friendly
 
-* Runs fully locally using Ollama
-* No external API dependencies required
-* Suitable for sensitive data (e.g., internal docs, APIs)
+- Runs locally via Ollama
+- No external LLM API required
+- Suitable for private document collections
 
----
+### ✅ Observability
+
+- LangSmith tracing
+- Local logging
+- Retrieval inspection
+- Debug-friendly workflow visualization
 
 ### ✅ Production-Oriented Patterns
 
-* Persistent vector store (Chroma)
-* Config-driven architecture
-* Ready for API layer (FastAPI) and scaling
-
----
-
-### ✅ (Optional) Reranking Layer
-
-* Supports cross-encoder reranking (BGE reranker)
-* Improves retrieval precision for complex queries
+- Persistent ChromaDB storage
+- Config-driven architecture
+- Streamlit UI
+- Agent workflow orchestration with LangGraph
 
 ---
 
 ## 📂 Project Structure
 
-```
-
 ```text
 rag-langchain-qwen/
 │
 ├── app/
-│   │
-│   ├── ui.py                    # Streamlit application
-│   ├── config.py                # Configuration settings
+│   ├── ui.py
+│   ├── config.py
 │   │
 │   ├── graph/
-│   │   ├── state.py             # LangGraph state definition
-│   │   ├── nodes.py             # Rewrite, Retrieve, Generate, Validate nodes
-│   │   └── rag_graph.py         # LangGraph workflow
+│   │   ├── state.py
+│   │   ├── nodes.py
+│   │   └── rag_graph.py
 │   │
 │   ├── ingestion/
-│   │   ├── ingest.py            # End-to-end ingestion pipeline
-│   │   ├── loader.py            # Document loading
-│   │   └── splitter.py          # Chunking logic
+│   │   ├── ingest.py
+│   │   ├── loader.py
+│   │   └── splitter.py
 │   │
 │   ├── retrieval/
-│   │   └── retriever.py         # ChromaDB retrieval layer
+│   │   └── retriever.py
 │   │
 │   ├── vectorstore/
-│   │   └── chroma_store.py      # ChromaDB persistence and loading
+│   │   └── chroma_store.py
 │   │
 │   ├── embeddings/
-│   │   └── embedding.py         # HuggingFace embedding model
+│   │   └── embedding.py
 │   │
 │   ├── llm/
-│   │   └── qwen_llm.py          # Ollama / Qwen integration
+│   │   └── qwen_llm.py
 │   │
 │   ├── prompts/
-│   │   └── rag_prompt.py        # Prompt templates
+│   │   └── rag_prompt.py
 │   │
 │   └── chains/
-│       └── rag_chain.py         # Legacy LangChain RAG chain
+│       └── rag_chain.py  # Legacy implementation
 │
-├── data/                        # Source documents
-├── chroma_db/                   # Local vector database
-├── logs/                        # Local trace logs
-├── .env                         # Environment variables
+├── data/
+├── chroma_db/
+├── logs/
+├── .env
 ├── .gitignore
 ├── requirements.txt
 └── README.md
 ```
 
-### LangGraph Workflow
+---
+
+## 🔄 LangGraph Workflow
 
 ```text
 START
@@ -177,31 +175,21 @@ generate
 validate
   │
   ▼
- END
-```
-
+END
 ```
 
 ---
 
 ## 🚀 Getting Started
 
-### 1. Clone repo
+### 1. Clone Repository
 
 ```bash
 git clone https://github.com/alexey10/rag-langchain-qwen.git
 cd rag-langchain-qwen
 ```
-## 🔐 Environment Variables
 
-Create a `.env` file in the root directory:
-LANGCHAIN_API_KEY=your_key
-HF_TOKEN=your_token
-OPENAI_API_KEY=your_key
-
----
-
-### 2. Setup environment (Python 3.11 recommended)
+### 2. Create Virtual Environment
 
 ```bash
 python3.11 -m venv venv
@@ -209,138 +197,140 @@ source venv/bin/activate
 pip install -r requirements.txt
 ```
 
----
+### 3. Configure Environment Variables
 
-### 3. Start LLM (Ollama)
+Create a `.env` file:
+
+```env
+LANGCHAIN_API_KEY=your_langsmith_key
+LANGCHAIN_PROJECT=agentic-rag
+
+HF_TOKEN=your_huggingface_token
+```
+
+### 4. Start Ollama
 
 ```bash
 ollama serve
 ollama run qwen3
 ```
 
----
+### 5. Add Documents
 
-### 4. Add documents
+Place files in:
 
-Place your files in:
-
-```
+```text
 data/docs/
 ```
 
----
-
-### 5. Run ingestion (one-time)
+### 6. Build the Vector Index
 
 ```bash
 python -m app.main
 ```
 
-(Ensure `run_ingestion()` is enabled for first run)
-
----
-
-### 6. Query the system
+### 7. Launch the Application
 
 ```bash
-python -m app.main
+streamlit run app/ui.py
 ```
 
-Example:
+Open:
 
-```
-Ask a question: What are the key risks discussed?
+```text
+http://localhost:8501
 ```
 
 ---
 
 ## 🔍 Example Output
 
-```
+```text
+Question:
+What inflation changes are expected in 2027?
+
 Answer:
-The document highlights three primary risks: ...
+Global headline inflation is expected to decline to 3.4% in 2027,
+down from 3.8% in 2026.
 
-Sources:
-- doc_chunk_1
-- doc_chunk_2
+Search Query:
+What is the IMF forecast for global inflation in 2027?
+
+Validation:
+PASS
 ```
 
 ---
 
-## 🧪 Observability (Debugging Retrieval)
+## 📊 Current Status
 
-To inspect retrieval quality, enable logging in `main.py`:
+| Item | Status |
+|--------|--------|
+| Basic RAG (Qwen + Chroma) | ✅ Complete |
+| Streamlit UI | ✅ Complete |
+| LangSmith Observability | ✅ Complete |
+| Query Rewrite Node | ✅ Complete |
+| LLM Validation Node | ✅ Complete |
+| LangGraph Agentic RAG | ✅ Complete |
+| Local Deployment | ✅ Complete |
+| GitHub Portfolio Project | ✅ Complete |
 
-```python
-docs = retriever.get_relevant_documents(query)
+### Agent Maturity
 
-for i, doc in enumerate(docs):
-    print(f"\n--- Chunk {i+1} ---\n{doc.page_content[:300]}")
-```
-
-This helps diagnose:
-
-* irrelevant retrieval
-* poor chunking
-* missing context
+| Level | Capability |
+|---------|---------|
+| Traditional RAG | Retrieve → Generate |
+| Agentic RAG v1 | Rewrite → Retrieve → Generate → Validate |
+| Agentic RAG v2 | Retry on Failed Validation |
+| Agentic RAG v3 | Multiple Retrieval Strategies |
+| Agentic RAG v4 | Tool Calling + Planning |
 
 ---
-
-## Current Status
-| Item                                  | Status          |
-| ------------------------------------- | --------------- |
-| Basic RAG (Qwen + Chroma + LangChain) | ✅ Complete      |
-| Streamlit UI                          | ✅ Complete      |
-| LangSmith Observability               | ✅ Complete      |
-| LangGraph for Agentic RAG             | ✅ Complete (v1) |
-| Local Deployment                      | ✅ Complete      |
-| GitHub Portfolio Project              | ✅ Complete      |
-
-| Level           | Capability                               |
-| --------------- | ---------------------------------------- |
-| Traditional RAG | Retrieve → Generate                      |
-| Agentic RAG v1  | Rewrite → Retrieve → Generate → Validate |
-| Agentic RAG v2  | Retry on failed validation               |
-| Agentic RAG v3  | Multiple retrieval strategies            |
-| Agentic RAG v4  | Tool calling + planning                  |
 
 ## 📈 Future Improvements
 
-## Next Iteration
+### Next Iteration
 
-* 🔹 Hybrid Search (Vector + BM25)
-* 🔹 Query Rewriting and Retrieval Retry
-* 🔹 LLM-based Answer Validation
-* 🔹 Hallucination Detection
-* 🔹 Multi-document Reasoning
-* 🔹 RAG Evaluation with RAGAS
-* 🔹 FastAPI Inference Service
-* 🔹 Hugging Face Deployment
+- 🔹 Self-correcting validation loop
+- 🔹 Hybrid Search (Vector + BM25)
+- 🔹 Hallucination Detection
+- 🔹 Multi-document Reasoning
+- 🔹 Citation-aware Responses
+- 🔹 RAG Evaluation with RAGAS
+- 🔹 FastAPI Inference Service
+- 🔹 Hugging Face Deployment
 
 ---
 
 ## 💡 Key Learnings
 
-* RAG performance depends more on **retrieval quality** than LLM choice
-* Chunking strategy significantly impacts answer accuracy
-* Reranking provides one of the highest ROI improvements
-* Observability is critical for debugging real-world RAG systems
+- RAG performance depends more on retrieval quality than model size
+- Query rewriting can significantly improve retrieval quality
+- Chunking strategy impacts answer accuracy
+- Observability is critical for debugging production AI systems
+- Validation layers improve trust and answer quality
 
 ---
 
 ## 🎯 Use Cases
 
-* API documentation assistant
-* Internal knowledge base search
-* Compliance / policy Q&A
-* Partner integration support tools
+- API documentation assistant
+- Internal knowledge base search
+- Compliance and policy Q&A
+- Partner integration support
+- Financial and research document analysis
 
 ---
 
 ## 👤 Author
 
-Built by Alexey Piskovatskov
-Focus: AI systems, program management, and scalable architectures
+**Alexey Piskovatskov**
+
+Focus areas:
+- AI Systems
+- Program Management
+- Agentic Workflows
+- Scalable Architectures
 
 ---
 
