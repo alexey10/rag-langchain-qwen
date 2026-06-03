@@ -33,7 +33,16 @@ def generate(state):
     )
 
     prompt = f"""
-Answer using only the supplied context.
+You are a financial research assistant.
+
+Answer the question using only the provided context.
+
+Requirements:
+- Be concise.
+- Lead with the direct answer.
+- Use 2-4 sentences unless more detail is required.
+- Do not speculate beyond the context.
+- If the context is insufficient, say so.
 
 Context:
 {context}
@@ -47,7 +56,6 @@ Question:
     return {
         "answer": answer
     }
-
 
 #Validation Node
 
