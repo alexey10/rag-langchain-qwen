@@ -7,6 +7,17 @@ from app.llm.qwen_llm import get_llm
 retriever = get_retriever()
 llm = get_llm()
 
+from app.prompts.rewrite_prompt import (
+    get_rewrite_prompt
+)
+
+from app.prompts.generation_prompt import (
+    get_generation_prompt
+)
+
+from app.prompts.validation_prompt import (
+    get_validation_prompt
+)
 
 #Retrieval Node
 
@@ -32,24 +43,10 @@ def generate(state):
         for doc in state["documents"]
     )
 
-    prompt = f"""
-You are a financial research assistant.
-
-Answer the question using only the provided context.
-
-Requirements:
-- Be concise.
-- Lead with the direct answer.
-- Use 2-4 sentences unless more detail is required.
-- Do not speculate beyond the context.
-- If the context is insufficient, say so.
-
-Context:
-{context}
-
-Question:
-{state["question"]}
-"""
+    prompt = get_generation_prompt(
+        context,
+        state["question"]
+    )
 
     answer = llm.invoke(prompt)
 
@@ -61,63 +58,24 @@ Question:
 
 def validate(state):
 
-    context = "\n\n".join(
-        doc.page_content
-        for doc in state["documents"]
+    prompt = get_validation_prompt(
+        state["question"],
+        state["answer"]
     )
 
-    prompt = f"""
-You are evaluating a RAG response.
-
-Question:
-{state["question"]}
-
-Retrieved Context:
-{context}
-
-Answer:
-{state["answer"]}
-
-Determine:
-
-1. Is the answer supported by the context?
-2. Is it relevant to the question?
-3. Is it reasonably complete?
-
-Respond ONLY with:
-
-PASS
-
-or
-
-RETRY
-"""
-
-    verdict = llm.invoke(prompt).strip()
-
-    if "PASS" in verdict.upper():
-        return {
-            "validation": "PASS",
-            "validation_reason": verdict,
-        }
+    result = llm.invoke(prompt)
 
     return {
-        "validation": "RETRY",
-        "validation_reason": verdict,
+        "validation": result.strip()
     }
 
 #Rewrite Query
+
 def rewrite_query(state):
 
-    prompt = f"""
-Rewrite the following user question to improve
-document retrieval.
-
-Return only the rewritten query.
-
-Question:
-{state["question"]}
-"""
+    prompt = get_rewrite_prompt(
+        state["question"]
+    )
 
     rewritten = llm.invoke(prompt)
 
