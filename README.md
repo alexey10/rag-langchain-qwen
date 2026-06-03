@@ -113,21 +113,73 @@ Observability:
 ## 📂 Project Structure
 
 ```
+
+```text
 rag-langchain-qwen/
-├── app/
-│   ├── ingestion/        # Document loading & chunking
-│   ├── embeddings/       # Embedding models (BGE)
-│   ├── vectorstore/      # Chroma integration
-│   ├── retrieval/        # Retriever + reranker
-│   ├── llm/              # Qwen (Ollama wrapper)
-│   ├── chains/           # RAG pipeline
-│   ├── prompts/          # Prompt templates
-│   └── main.py           # CLI entry point
 │
-├── data/docs/            # Source documents
-├── chroma_db/            # Persistent vector DB
+├── app/
+│   │
+│   ├── ui.py                    # Streamlit application
+│   ├── config.py                # Configuration settings
+│   │
+│   ├── graph/
+│   │   ├── state.py             # LangGraph state definition
+│   │   ├── nodes.py             # Rewrite, Retrieve, Generate, Validate nodes
+│   │   └── rag_graph.py         # LangGraph workflow
+│   │
+│   ├── ingestion/
+│   │   ├── ingest.py            # End-to-end ingestion pipeline
+│   │   ├── loader.py            # Document loading
+│   │   └── splitter.py          # Chunking logic
+│   │
+│   ├── retrieval/
+│   │   └── retriever.py         # ChromaDB retrieval layer
+│   │
+│   ├── vectorstore/
+│   │   └── chroma_store.py      # ChromaDB persistence and loading
+│   │
+│   ├── embeddings/
+│   │   └── embedding.py         # HuggingFace embedding model
+│   │
+│   ├── llm/
+│   │   └── qwen_llm.py          # Ollama / Qwen integration
+│   │
+│   ├── prompts/
+│   │   └── rag_prompt.py        # Prompt templates
+│   │
+│   └── chains/
+│       └── rag_chain.py         # Legacy LangChain RAG chain
+│
+├── data/                        # Source documents
+├── chroma_db/                   # Local vector database
+├── logs/                        # Local trace logs
+├── .env                         # Environment variables
+├── .gitignore
 ├── requirements.txt
 └── README.md
+```
+
+### LangGraph Workflow
+
+```text
+START
+  │
+  ▼
+rewrite_query
+  │
+  ▼
+retrieve
+  │
+  ▼
+generate
+  │
+  ▼
+validate
+  │
+  ▼
+ END
+```
+
 ```
 
 ---
