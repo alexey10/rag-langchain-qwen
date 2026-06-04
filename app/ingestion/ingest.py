@@ -11,5 +11,10 @@ def run_ingestion():
     embedding = get_embedding_model()
     vectorstore = create_vectorstore(chunks, embedding)
 
-     
+    print(f"Loaded docs: {len(docs)}")
+    print(f"Chunks created: {len(chunks)}")     
+   
+    print("\nFirst chunk preview:\n")
+    print(chunks[0].page_content[:500])
+
     print("✅ Ingestion complete")

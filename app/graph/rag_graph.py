@@ -11,6 +11,17 @@ from app.graph.nodes import (
 
 graph = StateGraph(RAGState)
 
+def route_validation(state):
+
+    if state["validation"] == "PASS":
+        return "pass"
+
+    if state.get("retry_count", 0) >= 2:
+        return "pass"
+
+    return "retry"
+
+
 graph.add_node("rewrite_query", rewrite_query)
 graph.add_node("retrieve", retrieve)
 graph.add_node("generate", generate)
@@ -33,9 +44,13 @@ graph.add_edge(
     "validate"
 )
 
-graph.add_edge(
+graph.add_conditional_edges(
     "validate",
-    END
+    route_validation,
+    {
+        "pass": END,
+        "retry": "rewrite_query",
+    }
 )
 
 rag_graph = graph.compile()

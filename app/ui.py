@@ -65,6 +65,9 @@ if "validation" not in st.session_state:
 if "rewritten_question" not in st.session_state:
     st.session_state.rewritten_question = ""
 
+if "retry_count" not in st.session_state:
+    st.session_state.retry_count = 0
+
 # -------------------------------
 # Sidebar
 # -------------------------------
@@ -80,7 +83,10 @@ with st.sidebar:
         st.session_state.messages = []
         st.session_state.sources = []
         st.session_state.latency = 0
-        st.success("Chat cleared")
+        st.session_state.validation = ""
+        st.session_state.rewritten_question = ""
+        st.session_state.retry_count = 0
+        st.success("Chat cleared")      
 
 # -------------------------------
 # Chat input
@@ -108,7 +114,8 @@ if user_input:
 
             result = rag_graph.invoke(
                 {
-                    "question": user_input
+                    "question": user_input,
+                    "retry_count": 0,
                 }
             )
 
@@ -124,6 +131,10 @@ if user_input:
                 "rewritten_question",
                 ""
             )
+            retry_count = result.get(
+                "retry_count",
+                0
+            )
 
         except Exception as e:
 
@@ -134,6 +145,7 @@ if user_input:
             sources = []
             validation = "ERROR"
             rewritten_question = ""
+            retry_count = 0
 
         end = time.time()
         st.session_state.messages.append(
@@ -149,6 +161,8 @@ if user_input:
 
         st.session_state.rewritten_question = rewritten_question
 
+        st.session_state.retry_count = retry_count
+        
         st.session_state.latency = round(
             end - start,
             2
@@ -164,6 +178,14 @@ for msg in st.session_state.messages:
 # -------------------------------
 if st.session_state.latency:
     st.caption(f"⏱️ Response time: {st.session_state.latency}s")
+
+# -------------------------------
+# Retry count
+# -------------------------------
+if st.session_state.get("retry_count", 0):
+    st.caption(
+        f"🔄 Retry attempts: {st.session_state.retry_count}"
+    )
 
 # -------------------------------
 # Rewrite

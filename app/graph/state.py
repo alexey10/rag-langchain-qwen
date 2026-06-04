@@ -8,3 +8,4 @@ class RAGState(TypedDict):
     answer: str
     validation: str
     validation_reason: str
+    retry_count: int

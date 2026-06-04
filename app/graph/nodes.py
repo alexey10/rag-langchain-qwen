@@ -1,3 +1,4 @@
+import logging
 
 from langsmith import traceable
 
@@ -30,6 +31,8 @@ def retrieve(state):
 
     docs = retriever.invoke(query)
 
+    print(f"Retrieved docs: {len(docs)}")
+
     return {
         "documents": docs
     }
@@ -56,6 +59,8 @@ def generate(state):
 
 #Validation Node
 
+# Validation Node
+
 def validate(state):
 
     prompt = get_validation_prompt(
@@ -65,8 +70,29 @@ def validate(state):
 
     result = llm.invoke(prompt)
 
+    retry_count = state.get(
+        "retry_count",
+        0
+    )
+
+    print(
+        f"VALIDATION ATTEMPT {retry_count + 1}: {result}"
+    )
+
+    logging.info(
+        f"VALIDATION ATTEMPT {retry_count + 1}: {result}"
+    )
+
+    validation = result.strip().upper()
+
+    if "PASS" in validation:
+        return {
+            "validation": "PASS"
+        }
+
     return {
-        "validation": result.strip()
+        "validation": "RETRY",
+        "retry_count": retry_count + 1,
     }
 
 #Rewrite Query
