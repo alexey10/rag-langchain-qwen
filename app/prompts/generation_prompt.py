@@ -14,6 +14,9 @@ Requirements:
 - Lead with the answer.
 - Do not speculate.
 
+Example:
+China is projected to grow at 4.5% in 2026 [Chunk 3].
+
 Context:
 {context}
 
