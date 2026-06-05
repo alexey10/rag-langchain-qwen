@@ -14,6 +14,10 @@ import streamlit as st
 from dotenv import load_dotenv
 from app.graph.rag_graph import rag_graph
 from app.ingestion.ingest import run_ingestion
+from app.config import DATA_PATH
+from app.utils.document_utils import (
+    get_indexed_documents
+)
 
 # -------------------------------
 # Load environment variables
@@ -87,6 +91,77 @@ with st.sidebar:
         st.session_state.rewritten_question = ""
         st.session_state.retry_count = 0
         st.success("Chat cleared")      
+
+# -------------------------------
+# Indexed Documents
+# -------------------------------
+documents = get_indexed_documents()
+
+st.sidebar.subheader(
+    f"📄 Indexed Documents ({len(documents)})"
+)
+
+if documents:
+
+    for doc in documents:
+
+        file_size = os.path.getsize(
+            os.path.join(DATA_PATH, doc)
+        )
+
+        st.sidebar.write(
+            f"• {doc} ({round(file_size/1024,1)} KB)"
+        )
+
+else:
+
+    st.sidebar.caption(
+        "No PDF documents found."
+    )
+
+# -------------------------------
+# Upload PDFs
+# -------------------------------
+
+
+uploaded_files = st.sidebar.file_uploader(
+    "Upload PDF Documents",
+    type=["pdf"],
+    accept_multiple_files=True
+)
+
+if uploaded_files:
+
+    saved_count = 0
+
+    for uploaded_file in uploaded_files:
+
+        save_path = os.path.join(
+            DATA_PATH,
+            uploaded_file.name
+        )
+
+        if os.path.exists(save_path):
+            st.sidebar.warning(
+                f"{uploaded_file.name} already exists."
+            )
+
+        else:
+            with open(save_path, "wb") as f:
+                f.write(
+                    uploaded_file.getbuffer()
+                )
+            saved_count += 1
+
+    if saved_count > 0:
+        st.sidebar.success(
+            f"{saved_count} file(s) uploaded."
+        )
+
+    st.sidebar.info(
+        "Click Re-index to update the vector database."
+    )
+
 
 # -------------------------------
 # Chat input
