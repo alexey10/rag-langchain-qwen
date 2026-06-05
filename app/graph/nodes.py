@@ -20,9 +20,9 @@ from app.prompts.validation_prompt import (
     get_validation_prompt
 )
 
-from app.retrieval.hybrid_retriever import (
-    hybrid_search
-)
+#from app.retrieval.hybrid_retriever import (
+#    hybrid_search
+#)
 
 
 #Retrieval Node
@@ -34,13 +34,15 @@ def retrieve(state):
     state["question"]
 	)
 
-#   docs = retriever.invoke(query)
+    docs = retriever.invoke(query)
 
-    docs = hybrid_search(query)
+    print(f"Retrieved docs: {len(docs)}")
 
-    print(
-        f"Hybrid retrieved {len(docs)} docs"
-    )
+#   docs = hybrid_search(query)
+
+#   print(
+#       f"Hybrid retrieved {len(docs)} docs"
+#   )
 
     return {
         "documents": docs
