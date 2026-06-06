@@ -9,3 +9,4 @@ class RAGState(TypedDict):
     validation: str
     validation_reason: str
     retry_count: int
+    selected_docs: list[str]

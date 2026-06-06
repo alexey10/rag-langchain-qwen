@@ -32,6 +32,27 @@ def retrieve(state):
 
     docs = retriever.invoke(query)
 
+    selected_docs = state.get(
+        "selected_docs",
+        []
+    )
+
+    if selected_docs:
+
+        docs = [
+            doc
+            for doc in docs
+            if any(
+                selected_doc
+                in doc.metadata.get(
+                    "source",
+                    ""
+                )
+                for selected_doc
+                in selected_docs
+            )
+        ]
+
     print(f"Retrieved docs: {len(docs)}")
 
     return {

@@ -120,6 +120,17 @@ else:
     )
 
 # -------------------------------
+# Document Filter
+# -------------------------------
+
+selected_docs = st.sidebar.multiselect(
+    "Search Documents",
+    options=documents,
+    default=documents
+)
+
+st.session_state.selected_docs = selected_docs
+# -------------------------------
 # Upload PDFs
 # -------------------------------
 
@@ -191,6 +202,7 @@ if user_input:
                 {
                     "question": user_input,
                     "retry_count": 0,
+                    "selected_docs": st.session_state.selected_docs,
                 }
             )
 
