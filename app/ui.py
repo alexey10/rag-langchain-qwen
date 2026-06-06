@@ -92,6 +92,18 @@ with st.sidebar:
         st.session_state.retry_count = 0
         st.success("Chat cleared")      
 
+    if st.sidebar.checkbox(
+        "Enable Workspace Reset"
+    ):
+    
+        if st.sidebar.button(
+            "🗑 Clear Workspace"
+        ):
+    
+            clear_workspace()
+    
+            st.rerun()
+
 # -------------------------------
 # Indexed Documents
 # -------------------------------
@@ -130,6 +142,24 @@ selected_docs = st.sidebar.multiselect(
 )
 
 st.session_state.selected_docs = selected_docs
+
+if selected_docs:
+
+    st.sidebar.caption(
+        f"🔎 Searching {len(selected_docs)} document(s)"
+    )
+
+    for doc in selected_docs:
+        st.sidebar.write(
+            f"✓ {doc}"
+        )
+
+else:
+
+    st.sidebar.warning(
+        "No documents selected."
+    )
+
 # -------------------------------
 # Upload PDFs
 # -------------------------------
