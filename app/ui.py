@@ -28,6 +28,10 @@ from app.evaluation.eval_dashboard import (
     get_recent_runs
 )
 
+from app.evaluation.run_eval import (
+    run_evaluation
+)
+
 # -------------------------------
 # Load environment variables
 # -------------------------------
@@ -141,9 +145,31 @@ else:
     )
 
 # -------------------------------
+# Running Evaluation
+# -------------------------------
+st.sidebar.subheader(
+    "🧪 Evaluation"
+)
+
+if st.sidebar.button(
+    "Run Evaluation"
+):
+    with st.spinner(
+        "Running evaluation..."
+    ):
+        report = run_evaluation()
+
+    st.success(
+        f"Accuracy: "
+        f"{report['accuracy']:.1f}%"
+    )
+
+report = load_latest_evaluation()
+
+
+# -------------------------------
 # Evaluation Dashboard
 # -------------------------------
-
 st.sidebar.subheader(
     "🧪 Last Evaluation"
 )
