@@ -29,4 +29,4 @@ def get_recent_runs():
         reverse=True
     )
 
-    return files[:5]
+    return files[:2]
