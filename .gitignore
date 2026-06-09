@@ -12,6 +12,10 @@ __pycache__/
 *.log
 logs/
 
+#Eval Results
+*.json
+data/evaluation/results/
+
 # Chroma DB (optional)
 chroma_db/
 
