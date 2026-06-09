@@ -11,12 +11,21 @@ if PROJECT_ROOT not in sys.path:
 import time
 import logging
 import streamlit as st
+from datetime import datetime
 from dotenv import load_dotenv
 from app.graph.rag_graph import rag_graph
 from app.ingestion.ingest import run_ingestion
 from app.config import DATA_PATH
 from app.utils.document_utils import (
     get_indexed_documents
+)
+
+from app.evaluation.eval_dashboard import (
+    load_latest_evaluation
+)
+
+from app.evaluation.eval_dashboard import (
+    get_recent_runs
 )
 
 # -------------------------------
@@ -130,6 +139,57 @@ else:
     st.sidebar.caption(
         "No PDF documents found."
     )
+
+# -------------------------------
+# Evaluation Dashboard
+# -------------------------------
+
+st.sidebar.subheader(
+    "🧪 Last Evaluation"
+)
+
+report = load_latest_evaluation()
+
+if report:
+
+    timestamp = datetime.fromisoformat(
+        report["timestamp"]
+    ) 
+
+    st.sidebar.metric(
+        "Accuracy",
+        f"{report['accuracy']:.1f}%"
+    )
+
+    st.sidebar.write(
+        f"Passed: {report['passed']}"
+    )
+
+    st.sidebar.write(
+        f"Failed: {report['failed']}"
+    )
+
+    st.sidebar.write(
+        f"Latency: "
+        f"{report['average_latency']:.1f}s"
+    )
+
+    st.sidebar.caption(
+        timestamp.strftime("%Y-%m-%d %H:%M")
+    )
+
+else:
+
+    st.sidebar.caption(
+        "No evaluation results found."
+    )
+
+st.sidebar.subheader(
+    "📈 Recent Runs"
+)
+
+for run in get_recent_runs():
+    st.sidebar.caption(run)
 
 # -------------------------------
 # Document Filter

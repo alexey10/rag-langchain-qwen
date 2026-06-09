@@ -1,0 +1,35 @@
+{
+  "timestamp": "2026-06-09T07:22:04.682913",
+  "questions": 5,
+  "passed": 5,
+  "failed": 0,
+  "accuracy": 100.0,
+  "average_latency": 49.82655282020569,
+  "results": [
+    {
+      "question": "What is China's GDP growth forecast for 2026?",
+      "pass": true,
+      "latency": 55.7297101020813
+    },
+    {
+      "question": "What is South Asia growth forecast for 2026?",
+      "pass": true,
+      "latency": 40.83591079711914
+    },
+    {
+      "question": "What is global inflation forecast for 2026?",
+      "pass": true,
+      "latency": 59.01959013938904
+    },
+    {
+      "question": "What is US growth forecast for 2026?",
+      "pass": true,
+      "latency": 43.67894506454468
+    },
+    {
+      "question": "What is Africa growth forecast for 2026?",
+      "pass": true,
+      "latency": 49.86860799789429
+    }
+  ]
+}

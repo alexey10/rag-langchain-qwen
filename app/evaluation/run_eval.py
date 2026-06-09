@@ -1,5 +1,8 @@
 import time
 import json
+import os
+
+from datetime import datetime
 from app.graph.rag_graph import rag_graph
 
 with open(
@@ -69,6 +72,55 @@ passed = sum(
 accuracy = (
     passed / total
 ) * 100
+
+report = {
+    "timestamp": datetime.now().isoformat(),
+    "questions": total,
+    "passed": passed,
+    "failed": total - passed,
+    "accuracy": accuracy,
+    "average_latency": avg_latency,
+    "results": results
+}
+
+os.makedirs(
+    "data/evaluation/results",
+    exist_ok=True
+)
+
+with open(
+    "data/evaluation/results/latest_eval.json",
+    "w"
+) as f:
+    json.dump(
+        report,
+        f,
+        indent=2
+    )
+os.makedirs(
+    "data/evaluation/results/history",
+    exist_ok=True
+)
+
+timestamp = datetime.now().strftime(
+    "%Y_%m_%d_%H%M%S"
+)
+
+history_file = (
+    f"data/evaluation/results/history/"
+    f"eval_{timestamp}.json"
+)
+
+with open(
+    history_file,
+    "w"
+) as f:
+
+    json.dump(
+        report,
+        f,
+        indent=2
+    )
 
 print("\n====================")
 print("Evaluation Results")
