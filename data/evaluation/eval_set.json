@@ -1,0 +1,22 @@
+[
+  {
+    "question": "What is China's GDP growth forecast for 2026?",
+    "expected_answer": "4.6"
+  },
+  {
+    "question": "What is South Asia growth forecast for 2026?",
+    "expected_answer": "5.6"
+  },
+  {
+    "question": "What is global inflation forecast for 2026?",
+    "expected_answer": "3.8"
+  },
+  {
+    "question": "What is US growth forecast for 2026?",
+    "expected_answer": "2.4"
+  },
+  {
+    "question": "What is Africa growth forecast for 2026?",
+    "expected_answer": "4.0"
+  }
+]
