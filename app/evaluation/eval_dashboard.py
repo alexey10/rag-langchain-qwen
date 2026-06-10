@@ -30,3 +30,59 @@ def get_recent_runs():
     )
 
     return files[:2]
+
+def get_evaluation_history():
+
+    history_path = (
+        "data/evaluation/results/history"
+    )
+
+    if not os.path.exists(history_path):
+        return []
+
+    files = sorted(
+        os.listdir(history_path)
+    )
+
+    history = []
+
+    for file in files:
+
+        with open(
+            os.path.join(
+                history_path,
+                file
+            )
+        ) as f:
+
+            report = json.load(f)
+    
+        timestamp = file.replace(
+            "eval_",
+            ""
+        ).replace(
+            ".json",
+            ""
+        )
+    
+        label = (
+            timestamp[5:7]      # month
+            + "/"
+            + timestamp[8:10]   # day
+            + " "
+            + timestamp[11:13]  # hour
+            + ":"
+            + timestamp[13:15]  # minute
+        )
+    
+        history.append(
+            {
+                "run": label,
+                "accuracy": report["accuracy"],
+                "latency": report[
+                    "average_latency"
+                ]
+            }
+        )
+
+    return history
