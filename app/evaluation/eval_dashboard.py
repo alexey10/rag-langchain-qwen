@@ -1,6 +1,7 @@
 import json
 import os
 
+MAX_RECENT_RUNS = 3
 
 def load_latest_evaluation():
 
@@ -14,6 +15,10 @@ def load_latest_evaluation():
 
     with open(path) as f:
         return json.load(f)
+
+import json
+import os
+
 
 def get_recent_runs():
 
@@ -29,4 +34,100 @@ def get_recent_runs():
         reverse=True
     )
 
-    return files[:2]
+    runs = []
+
+    for file in files[:MAX_RECENT_RUNS]:
+
+        timestamp = file.replace(
+            "eval_",
+            ""
+        ).replace(
+            ".json",
+            ""
+        )
+
+        label = (
+            timestamp[5:7]      # month
+            + "/"
+            + timestamp[8:10]   # day
+            + " "
+            + timestamp[11:13]  # hour
+            + ":"
+            + timestamp[13:15]  # minute
+        )
+
+        with open(
+            os.path.join(
+                history_path,
+                file
+            )
+        ) as f:
+
+            report = json.load(f)
+
+        runs.append(
+            {
+                "time": label,
+                "accuracy": report[
+                    "accuracy"
+                ]
+            }
+        )
+
+    return runs
+
+def get_evaluation_history():
+
+    history_path = (
+        "data/evaluation/results/history"
+    )
+
+    if not os.path.exists(history_path):
+        return []
+
+    files = sorted(
+        os.listdir(history_path)
+    )
+
+    history = []
+
+    for file in files:
+
+        with open(
+            os.path.join(
+                history_path,
+                file
+            )
+        ) as f:
+
+            report = json.load(f)
+    
+        timestamp = file.replace(
+            "eval_",
+            ""
+        ).replace(
+            ".json",
+            ""
+        )
+    
+        label = (
+            timestamp[5:7]      # month
+            + "/"
+            + timestamp[8:10]   # day
+            + " "
+            + timestamp[11:13]  # hour
+            + ":"
+            + timestamp[13:15]  # minute
+        )
+    
+        history.append(
+            {
+                "run": label,
+                "accuracy": report["accuracy"],
+                "latency": report[
+                    "average_latency"
+                ]
+            }
+        )
+
+    return history

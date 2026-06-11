@@ -1,5 +1,6 @@
 import sys
 import os
+import pandas as pd
 
 PROJECT_ROOT = os.path.abspath(
     os.path.join(os.path.dirname(__file__), "..")
@@ -26,6 +27,10 @@ from app.evaluation.eval_dashboard import (
 
 from app.evaluation.eval_dashboard import (
     get_recent_runs
+)
+
+from app.evaluation.eval_dashboard import (
+    get_evaluation_history
 )
 
 from app.evaluation.run_eval import (
@@ -215,7 +220,36 @@ st.sidebar.subheader(
 )
 
 for run in get_recent_runs():
-    st.sidebar.caption(run)
+
+    st.sidebar.caption(
+        f"{run['time']}  •  "
+        f"{run['accuracy']:.0f}%"
+    )
+
+# -------------------------------
+# Evaluation History
+# -------------------------------
+history = get_evaluation_history()
+
+if history:
+
+    df = pd.DataFrame(history)
+
+    st.subheader(
+        "📈 Accuracy Trend"
+    )
+
+    st.line_chart(
+        df.set_index("run")["accuracy"]
+    )
+
+st.subheader(
+    "⏱️ Latency Trend"
+)
+
+st.line_chart(
+    df.set_index("run")["latency"]
+)
 
 # -------------------------------
 # Document Filter
