@@ -220,7 +220,11 @@ st.sidebar.subheader(
 )
 
 for run in get_recent_runs():
-    st.sidebar.caption(run)
+
+    st.sidebar.caption(
+        f"{run['time']}  •  "
+        f"{run['accuracy']:.0f}%"
+    )
 
 # -------------------------------
 # Evaluation History
