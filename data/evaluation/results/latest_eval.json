@@ -1,43 +1,43 @@
 {
-  "timestamp": "2026-06-10T11:30:39.688414",
+  "timestamp": "2026-06-11T13:46:50.984279",
   "questions": 5,
   "passed": 5,
   "failed": 0,
   "accuracy": 100.0,
-  "average_latency": 50.02221050262451,
+  "average_latency": 48.680480289459226,
   "results": [
     {
       "question": "What is China's GDP growth forecast for 2026?",
       "pass": true,
-      "latency": 102.82676792144775,
+      "latency": 117.36537027359009,
       "answer": "China's GDP growth forecast for 2026 is 4.6 percent, revised upward by 0.2 percentage point from the October 2025 WEO projection.",
       "expected": "4.6"
     },
     {
       "question": "What is South Asia growth forecast for 2026?",
       "pass": true,
-      "latency": 32.809030055999756,
+      "latency": 31.77012610435486,
       "answer": "The South Asia growth forecast for 2026 is 5.6%.",
       "expected": "5.6"
     },
     {
       "question": "What is global inflation forecast for 2026?",
       "pass": true,
-      "latency": 38.22944784164429,
-      "answer": "The global inflation forecast for 2026 is 3.8 percent.",
+      "latency": 28.674866914749146,
+      "answer": "The global inflation forecast for 2026 is 3.8 percent year-on-year.",
       "expected": "3.8"
     },
     {
       "question": "What is US growth forecast for 2026?",
       "pass": true,
-      "latency": 34.628886699676514,
+      "latency": 33.305262088775635,
       "answer": "The US growth forecast for 2026 is 2.4 percent.",
       "expected": "2.4"
     },
     {
       "question": "What is Africa growth forecast for 2026?",
       "pass": true,
-      "latency": 41.61691999435425,
+      "latency": 32.286776065826416,
       "answer": "Africa's growth forecast for 2026 is 4.0 percent.",
       "expected": "4.0"
     }
