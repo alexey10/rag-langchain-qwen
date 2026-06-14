@@ -20,6 +20,7 @@ from app.prompts.validation_prompt import (
     get_validation_prompt
 )
 
+from app.observability.langfuse_client import langfuse
 
 #Retrieval Node
 
@@ -120,12 +121,18 @@ def validate(state):
 #Rewrite Query
 
 def rewrite_query(state):
-
-    prompt = get_rewrite_prompt(
-        state["question"]
-    )
-
-    rewritten = llm.invoke(prompt)
+    with langfuse.start_as_current_observation(
+        as_type="span",
+        name="rewrite_query",
+        input={"question": state["question"]}
+    ) as span:
+        prompt = get_rewrite_prompt(
+            state["question"]
+        )
+        rewritten = llm.invoke(prompt)
+        span.update(
+            output={"rewritten": rewritten.strip()}
+        )
 
     return {
         "rewritten_question": rewritten.strip()
