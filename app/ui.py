@@ -235,22 +235,29 @@ if history:
 
     df = pd.DataFrame(history)
 
-    st.subheader(
-        "📈 Accuracy Trend"
+    if not df.empty:
+
+        st.subheader(
+            "📈 Accuracy Trend"
+        )
+
+        st.line_chart(
+            df.set_index("run")["accuracy"]
+        )
+
+        st.subheader(
+            "⏱️ Latency Trend"
+        )
+
+        st.line_chart(
+            df.set_index("run")["latency"]
+        )
+
+else:
+
+    st.info(
+        "No evaluation history available yet."
     )
-
-    st.line_chart(
-        df.set_index("run")["accuracy"]
-    )
-
-st.subheader(
-    "⏱️ Latency Trend"
-)
-
-st.line_chart(
-    df.set_index("run")["latency"]
-)
-
 # -------------------------------
 # Document Filter
 # -------------------------------
