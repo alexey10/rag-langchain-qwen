@@ -22,8 +22,13 @@ from app.prompts.validation_prompt import (
 
 from app.observability.langfuse_client import langfuse
 
+from app.observability.tracing import (
+    traced_node
+)
+
 #Retrieval Node
 
+@traced_node
 def retrieve(state):
 
     query = state.get(
@@ -62,6 +67,7 @@ def retrieve(state):
 
 #Generation Node
 
+@traced_node
 def generate(state):
 
     context = "\n\n".join(
@@ -84,6 +90,7 @@ def generate(state):
 
 # Validation Node
 
+@traced_node
 def validate(state):
 
     prompt = get_validation_prompt(
@@ -120,19 +127,14 @@ def validate(state):
 
 #Rewrite Query
 
+@traced_node
 def rewrite_query(state):
-    with langfuse.start_as_current_observation(
-        as_type="span",
-        name="rewrite_query",
-        input={"question": state["question"]}
-    ) as span:
-        prompt = get_rewrite_prompt(
-            state["question"]
-        )
-        rewritten = llm.invoke(prompt)
-        span.update(
-            output={"rewritten": rewritten.strip()}
-        )
+
+    prompt = get_rewrite_prompt(
+        state["question"]
+    )
+
+    rewritten = llm.invoke(prompt)
 
     return {
         "rewritten_question": rewritten.strip()
