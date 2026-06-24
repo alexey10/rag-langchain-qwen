@@ -7,3 +7,12 @@ ollama
 pypdf
 packaging>=23.2,<24.0
 rank-bm25
+streamlit
+langchain
+langgraph
+langchain-ollama
+langsmith
+langfuse
+python-dotenv
+langchain-chroma
+langchain_huggingface
