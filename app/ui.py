@@ -249,6 +249,14 @@ if history:
 
     st.line_chart(chart_df)
 
+    st.subheader(
+    "⏱️ Latency Trend"
+    )
+    
+    st.line_chart(
+        df.set_index("run")["latency"]
+    )
+
 else:
 
     st.info(
