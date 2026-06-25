@@ -67,10 +67,12 @@ def get_recent_runs():
 
         runs.append(
             {
-                "time": label,
-                "accuracy": report[
-                    "accuracy"
-                ]
+                "time": timestamp,
+                "accuracy": report["accuracy"],
+                "retrieval_accuracy": report.get(
+                    "retrieval_accuracy",
+                    0
+                )
             }
         )
 
@@ -124,6 +126,7 @@ def get_evaluation_history():
             {
                 "run": label,
                 "accuracy": report["accuracy"],
+                "retrieval_accuracy": report.get("retrieval_accuracy",0),
                 "latency": report[
                     "average_latency"
                 ]

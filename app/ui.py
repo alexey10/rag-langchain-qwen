@@ -223,7 +223,8 @@ for run in get_recent_runs():
 
     st.sidebar.caption(
         f"{run['time']}  •  "
-        f"{run['accuracy']:.0f}%"
+        f"A:{run['accuracy']:.0f}% "
+        f"R:{run['retrieval_accuracy']:.0f}%"
     )
 
 # -------------------------------
@@ -235,23 +236,18 @@ if history:
 
     df = pd.DataFrame(history)
 
-    if not df.empty:
+    st.subheader(
+        "📈 Evaluation Trends"
+    )
 
-        st.subheader(
-            "📈 Accuracy Trend"
-        )
+    chart_df = df.set_index("run")[
+        [
+            "accuracy",
+            "retrieval_accuracy"
+        ]
+    ]
 
-        st.line_chart(
-            df.set_index("run")["accuracy"]
-        )
-
-        st.subheader(
-            "⏱️ Latency Trend"
-        )
-
-        st.line_chart(
-            df.set_index("run")["latency"]
-        )
+    st.line_chart(chart_df)
 
 else:
 

@@ -54,22 +54,46 @@ def evaluate_item(item):
             "expected": item["expected_answer"]
         }
 
+    print(result["documents"][0].metadata)
+
     elapsed = time.time() - start
 
     print(f"GRAPH RETURNED | {elapsed:.1f}s")
     answer = result["answer"]
+    retrieved_sources = []
+
+    for doc in result["documents"]:
+    
+        source = doc.metadata.get(
+            "source",
+            ""
+        )
+    
+        filename = source.split("/")[-1]
+    
+        retrieved_sources.append(
+            filename
+        )
+
+    retrieval_pass = (
+        item["expected_document"]
+        in retrieved_sources
+    )
+
     print("ANSWER EXTRACTED")
 
     passed = item["expected_answer"] in answer
     print(f"{'PASS' if passed else 'FAIL'} | {item['question']} ({elapsed:.1f}s)")
     print(f"Expected: {item['expected_answer']}")
     print(f"Answer:   {answer}\n")
+    print(result.keys())
 
     return {
         "question": item["question"],
         "pass": passed,
         "latency": elapsed,
         "answer": answer,
+        "retrieval_pass": retrieval_pass,
         "expected": item["expected_answer"]
     }
 
@@ -98,6 +122,8 @@ def run_evaluation():
     avg_latency = sum(r["latency"] for r in results) / total
     passed_count = sum(1 for r in results if r["pass"])
     accuracy = (passed_count / total) * 100
+    retrieval_passed = sum(1 for r in results if r["retrieval_pass"])
+    retrieval_accuracy = (retrieval_passed / total) * 100
 
     report = {
         "timestamp": datetime.now().isoformat(),
@@ -106,6 +132,7 @@ def run_evaluation():
         "failed": total - passed_count,
         "accuracy": accuracy,
         "average_latency": avg_latency,
+        "retrieval_accuracy": retrieval_accuracy,
         "results": results
     }
 
@@ -129,6 +156,8 @@ def run_evaluation():
     print(f"Failed:           {total - passed_count}")
     print(f"Accuracy:         {accuracy:.1f}%")
     print(f"Average Latency:  {avg_latency:.2f}s")
+    print(f"Answer Accuracy: " f"{accuracy:.1f}%")
+    print(f"Retrieval Accuracy: " f"{retrieval_accuracy:.1f}%")
     print("====================")
 
     return report

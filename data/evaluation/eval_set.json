@@ -1,22 +1,27 @@
 [
   {
     "question": "What is China's GDP growth forecast for 2026?",
-    "expected_answer": "4.6"
+    "expected_answer": "4.6",
+    "expected_document": "world_economic_outlook.pdf"
   },
   {
     "question": "What is South Asia growth forecast for 2026?",
-    "expected_answer": "5.6"
+    "expected_answer": "5.6",
+    "expected_document": "reg_devs_outlooks.pdf"
   },
   {
     "question": "What is global inflation forecast for 2026?",
-    "expected_answer": "3.8"
+    "expected_answer": "3.8",
+    "expected_document": "world_economic_outlook.pdf"
   },
   {
     "question": "What is US growth forecast for 2026?",
-    "expected_answer": "2.4"
+    "expected_answer": "2.4",
+    "expected_document": "world_economic_outlook.pdf"
   },
   {
     "question": "What is Africa growth forecast for 2026?",
-    "expected_answer": "4.0"
+    "expected_answer": "4.0",
+    "expected_document": "reg_devs_outlooks.pdf"
   }
 ]
