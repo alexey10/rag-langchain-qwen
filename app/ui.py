@@ -237,7 +237,7 @@ if history:
     df = pd.DataFrame(history)
 
     st.subheader(
-        "📈 Evaluation Trends"
+        "📊 Quality Trends"
     )
 
     chart_df = df.set_index("run")[
@@ -250,7 +250,7 @@ if history:
     st.line_chart(chart_df)
 
     st.subheader(
-    "⏱️ Latency Trend"
+        "⚡ Performance Trends"    
     )
     
     st.line_chart(
