@@ -14,6 +14,19 @@ import logging
 import streamlit as st
 from datetime import datetime
 from dotenv import load_dotenv
+
+# -------------------------------
+# Load environment variables
+# -------------------------------
+load_dotenv()
+
+# LangSmith config (MUST be before LangChain usage)
+os.environ["LANGCHAIN_TRACING_V2"] = "true"
+os.environ["LANGCHAIN_PROJECT"] = os.getenv("LANGCHAIN_PROJECT", "rag-demo")
+
+if not os.getenv("LANGCHAIN_API_KEY"):
+    raise ValueError("Missing LANGCHAIN_API_KEY in environment")
+
 from app.graph.rag_graph import rag_graph
 from app.ingestion.ingest import run_ingestion
 from app.config import DATA_PATH
@@ -36,18 +49,6 @@ from app.evaluation.eval_dashboard import (
 from app.evaluation.run_eval import (
     run_evaluation
 )
-
-# -------------------------------
-# Load environment variables
-# -------------------------------
-load_dotenv()
-
-# LangSmith config (MUST be before LangChain usage)
-os.environ["LANGCHAIN_TRACING_V2"] = "true"
-os.environ["LANGCHAIN_PROJECT"] = os.getenv("LANGCHAIN_PROJECT", "rag-demo")
-
-if not os.getenv("LANGCHAIN_API_KEY"):
-    raise ValueError("Missing LANGCHAIN_API_KEY in environment")
 
 # -------------------------------
 # Local logging (file-based)
@@ -162,7 +163,10 @@ if st.sidebar.button(
     with st.spinner(
         "Running evaluation..."
     ):
-        report = run_evaluation()
+        report = run_evaluation(
+            warm_up=False,
+            timeout=None
+        )
 
     st.success(
         f"Accuracy: "
@@ -364,6 +368,9 @@ if user_input:
                     "question": user_input,
                     "retry_count": 0,
                     "selected_docs": st.session_state.selected_docs,
+                    "node_timings": [],
+                    "enable_validation": False,
+                    "enable_rewrite": False,
                 }
             )
 
@@ -372,7 +379,7 @@ if user_input:
 
             validation = result.get(
                 "validation",
-                "UNKNOWN"
+                "SKIPPED"
             )
 
             rewritten_question = result.get(
@@ -457,6 +464,9 @@ if st.session_state.validation:
 
     elif st.session_state.validation == "RETRY":
         st.warning("⚠️ Validation Requested Retry")
+
+    elif st.session_state.validation == "SKIPPED":
+        st.caption("Validation skipped")
 
 # -------------------------------
 # Sources display

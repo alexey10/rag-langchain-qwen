@@ -38,6 +38,24 @@ def traced_node(func):
                 3
             )
 
+            if isinstance(result, dict):
+                node_timings = list(
+                    state.get("node_timings", [])
+                )
+
+                node_timings.append(
+                    {
+                        "node": func.__name__,
+                        "elapsed_seconds": elapsed,
+                        "retry_count": state.get("retry_count", 0),
+                    }
+                )
+
+                result = {
+                    **result,
+                    "node_timings": node_timings,
+                }
+
             span.update(
                 output=result,
                 metadata={
