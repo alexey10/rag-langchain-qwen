@@ -1,4 +1,4 @@
-from typing import TypedDict, List
+from typing import Any, TypedDict, List
 from langchain_core.documents import Document
 
 class RAGState(TypedDict):
@@ -10,3 +10,6 @@ class RAGState(TypedDict):
     validation_reason: str
     retry_count: int
     selected_docs: list[str]
+    node_timings: List[dict[str, Any]]
+    enable_validation: bool
+    enable_rewrite: bool
