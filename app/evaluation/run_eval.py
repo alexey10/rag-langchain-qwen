@@ -45,7 +45,7 @@ def invoke_graph(item):
         "selected_docs": [],
         "node_timings": [],
         "enable_validation": False,
-        "enable_rewrite": False
+        "enable_rewrite": True
     })
 
 

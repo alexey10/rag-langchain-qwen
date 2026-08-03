@@ -50,6 +50,10 @@ from app.evaluation.run_eval import (
     run_evaluation
 )
 
+from app.llm.qwen_llm import (
+    warm_llm
+)
+
 # -------------------------------
 # Local logging (file-based)
 # -------------------------------
@@ -60,6 +64,17 @@ logging.basicConfig(
     level=logging.INFO,
     format="%(asctime)s - %(message)s",
 )
+
+
+@st.cache_resource(show_spinner=False)
+def warm_model_once():
+    start = time.time()
+    response = warm_llm()
+
+    return {
+        "response": response,
+        "latency": round(time.time() - start, 2)
+    }
 
 
 # -------------------------------
@@ -96,6 +111,14 @@ if "retry_count" not in st.session_state:
 # -------------------------------
 with st.sidebar:
     st.header("⚙️ Controls")
+
+    if st.button("Warm Model"):
+        with st.spinner("Warming model..."):
+            warm_result = warm_model_once()
+
+        st.success(
+            f"Model ready ({warm_result['latency']}s)"
+        )
 
     if st.button("🔄 Rebuild Index"):
         with st.spinner("Re-indexing documents..."):
@@ -370,7 +393,7 @@ if user_input:
                     "selected_docs": st.session_state.selected_docs,
                     "node_timings": [],
                     "enable_validation": False,
-                    "enable_rewrite": False,
+                    "enable_rewrite": True,
                 }
             )
 
