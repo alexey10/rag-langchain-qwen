@@ -6,3 +6,11 @@ def get_llm():
         model=LLM_MODEL,
         temperature=0.1
     )
+
+
+def warm_llm():
+    llm = get_llm()
+
+    return llm.invoke(
+        "Reply with OK only."
+    )
