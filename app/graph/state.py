@@ -13,3 +13,4 @@ class RAGState(TypedDict):
     node_timings: List[dict[str, Any]]
     enable_validation: bool
     enable_rewrite: bool
+    rewrite_cache_hit: bool

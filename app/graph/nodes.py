@@ -26,6 +26,11 @@ from app.observability.tracing import (
     traced_node
 )
 
+from app.utils.rewrite_cache import (
+    get_cached_rewrite,
+    save_cached_rewrite,
+)
+
 #Retrieval Node
 
 @traced_node
@@ -130,12 +135,27 @@ def validate(state):
 @traced_node
 def rewrite_query(state):
 
+    question = state["question"]
+    cached_rewrite = get_cached_rewrite(question)
+
+    if cached_rewrite:
+        return {
+            "rewritten_question": cached_rewrite,
+            "rewrite_cache_hit": True
+        }
+
     prompt = get_rewrite_prompt(
-        state["question"]
+        question
     )
 
     rewritten = llm.invoke(prompt)
+    rewritten = rewritten.strip()
+    save_cached_rewrite(
+        question,
+        rewritten
+    )
 
     return {
-        "rewritten_question": rewritten.strip()
+        "rewritten_question": rewritten,
+        "rewrite_cache_hit": False
     }

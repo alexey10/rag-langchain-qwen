@@ -13,6 +13,7 @@ Requirements:
 - Be concise.
 - Lead with the answer.
 - Do not speculate.
+- Use one or two sentences.
 
 Context:
 {context}
