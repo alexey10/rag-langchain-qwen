@@ -1,11 +1,14 @@
 from fastapi import APIRouter
-from gateway.router import get_provider
+
+from app.api.schemas import ChatRequest
+from app.gateway.router import get_provider
 
 router = APIRouter(prefix="/v1")
 
 
 @router.post("/chat")
-def chat(request):
+def chat(request: ChatRequest):
+
     provider = get_provider(request.model)
 
     response = provider.chat(
