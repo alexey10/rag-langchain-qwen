@@ -3,6 +3,7 @@ import json
 import os
 import threading
 from datetime import datetime
+from app.config import REWRITE_CACHE_ENABLED
 from app.graph.rag_graph import rag_graph
 
 NODE_LATENCY_KEYS = {
@@ -92,6 +93,8 @@ def evaluate_item(item, timeout=None):
             "answer": f"ERROR: {e}",
             "retrieval_pass": False,
             "retrieved_sources": [],
+            "rewrite_cache_enabled": REWRITE_CACHE_ENABLED,
+            "rewrite_cache_hit": False,
             "node_timings": [],
             **EMPTY_NODE_LATENCIES,
             "expected": item["expected_answer"]
@@ -105,6 +108,8 @@ def evaluate_item(item, timeout=None):
             "answer": "TIMEOUT",
             "retrieval_pass": False,
             "retrieved_sources": [],
+            "rewrite_cache_enabled": REWRITE_CACHE_ENABLED,
+            "rewrite_cache_hit": False,
             "node_timings": [],
             **EMPTY_NODE_LATENCIES,
             "expected": item["expected_answer"]
@@ -159,6 +164,11 @@ def evaluate_item(item, timeout=None):
         "answer": answer,
         "retrieval_pass": retrieval_pass,
         "retrieved_sources": retrieved_sources,
+        "rewrite_cache_enabled": REWRITE_CACHE_ENABLED,
+        "rewrite_cache_hit": result.get(
+            "rewrite_cache_hit",
+            False
+        ),
         "node_timings": node_timings,
         **node_latency_summary,
         "expected": item["expected_answer"]

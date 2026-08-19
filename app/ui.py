@@ -29,7 +29,10 @@ if not os.getenv("LANGCHAIN_API_KEY"):
 
 from app.graph.rag_graph import rag_graph
 from app.ingestion.ingest import run_ingestion
-from app.config import DATA_PATH
+from app.config import (
+    DATA_PATH,
+    REWRITE_CACHE_ENABLED,
+)
 from app.utils.document_utils import (
     get_indexed_documents
 )
@@ -106,6 +109,12 @@ if "rewritten_question" not in st.session_state:
 if "retry_count" not in st.session_state:
     st.session_state.retry_count = 0
 
+if "rewrite_cache_hit" not in st.session_state:
+    st.session_state.rewrite_cache_hit = False
+
+if "node_timings" not in st.session_state:
+    st.session_state.node_timings = []
+
 # -------------------------------
 # Sidebar
 # -------------------------------
@@ -132,6 +141,8 @@ with st.sidebar:
         st.session_state.validation = ""
         st.session_state.rewritten_question = ""
         st.session_state.retry_count = 0
+        st.session_state.rewrite_cache_hit = False
+        st.session_state.node_timings = []
         st.success("Chat cleared")      
 
     if st.sidebar.checkbox(
@@ -413,6 +424,14 @@ if user_input:
                 "retry_count",
                 0
             )
+            rewrite_cache_hit = result.get(
+                "rewrite_cache_hit",
+                False
+            )
+            node_timings = result.get(
+                "node_timings",
+                []
+            )
 
         except Exception as e:
 
@@ -424,6 +443,8 @@ if user_input:
             validation = "ERROR"
             rewritten_question = ""
             retry_count = 0
+            rewrite_cache_hit = False
+            node_timings = []
 
         end = time.time()
         st.session_state.messages.append(
@@ -440,6 +461,10 @@ if user_input:
         st.session_state.rewritten_question = rewritten_question
 
         st.session_state.retry_count = retry_count
+
+        st.session_state.rewrite_cache_hit = rewrite_cache_hit
+
+        st.session_state.node_timings = node_timings
         
         st.session_state.latency = round(
             end - start,
@@ -476,6 +501,15 @@ if st.session_state.get("rewritten_question"):
         f"{st.session_state.rewritten_question}"
     )
 
+    if st.session_state.get("rewrite_cache_hit"):
+        st.caption("Rewrite served from cache")
+
+    elif REWRITE_CACHE_ENABLED:
+        st.caption("Rewrite cache miss")
+
+    else:
+        st.caption("Rewrite cache disabled")
+
 #
 # -------------------------------
 # Validation Status
@@ -507,6 +541,15 @@ if st.session_state.sources:
 # Debug / Observability
 # -------------------------------
 with st.expander("🔍 Retrieved Context (Debug)"):
+    if st.session_state.node_timings:
+        st.write("Node timings")
+
+        for timing in st.session_state.node_timings:
+            st.write(
+                f"{timing['node']}: "
+                f"{timing['elapsed_seconds']}s"
+            )
+
     if st.session_state.sources:
         for doc in st.session_state.sources:
             st.write(doc.page_content[:500])
