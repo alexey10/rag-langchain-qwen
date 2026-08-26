@@ -24,3 +24,5 @@ chroma_db/
 
 # Streamlit
 .streamlit/
+
+docs/openapi.json
