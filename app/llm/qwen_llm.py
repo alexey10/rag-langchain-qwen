@@ -6,15 +6,16 @@ from app.config import (
     LLM_REASONING,
 )
 
-def get_llm():
+def get_llm(model=None):
+    model = model or LLM_MODEL
+
     return OllamaLLM(
-        model=LLM_MODEL,
+        model=model,
         temperature=0.1,
         num_predict=LLM_NUM_PREDICT,
         keep_alive=LLM_KEEP_ALIVE,
-        reasoning=LLM_REASONING
+        reasoning=LLM_REASONING,
     )
-
 
 def warm_llm():
     llm = get_llm()

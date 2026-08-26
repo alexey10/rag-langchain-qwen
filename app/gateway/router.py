@@ -10,10 +10,13 @@ def get_provider(model):
             f"Unsupported model: {model}"
         )
 
-    provider_name = MODELS[normalized_model]["provider"]
+    model_config = MODELS[normalized_model]
+
+    provider_name = model_config["provider"]
+    runtime_model = model_config["model"]
 
     if provider_name == "ollama":
-        return OllamaProvider()
+        return OllamaProvider(runtime_model)
 
     raise ValueError(
         f"Unsupported provider: {provider_name}"
