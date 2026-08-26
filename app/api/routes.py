@@ -2,8 +2,9 @@ from uuid import uuid4
 
 from fastapi import APIRouter, HTTPException
 
-from app.api.schemas import ChatRequest, ChatResponse
+from app.api.schemas import ChatRequest, ChatResponse, ModelsResponse, ModelInfo
 from app.gateway.router import get_provider
+from app.gateway.models import MODELS
 
 router = APIRouter(prefix="/v1")
 
@@ -16,7 +17,6 @@ def chat(request: ChatRequest):
 
         response = provider.chat(
             messages=request.messages,
-            model=request.model,
         )
 
         return {
@@ -30,3 +30,12 @@ def chat(request: ChatRequest):
             status_code=400,
             detail=str(exc),
         )
+
+@router.get("/models", response_model=ModelsResponse)
+def list_models():
+    return {
+        "models": [
+            {"id": model_id, **meta}
+            for model_id, meta in MODELS.items()
+        ]
+    }

@@ -1,50 +1,199 @@
 {
-  "timestamp": "2026-06-24T14:39:02.249688",
+  "timestamp": "2026-08-19T14:24:10.760484",
   "questions": 5,
   "passed": 5,
   "failed": 0,
   "accuracy": 100.0,
-  "average_latency": 61.99565415382385,
+  "average_latency": 9.89194359779358,
+  "average_rewrite_latency": 0.001,
+  "average_retrieve_latency": 3.2156,
+  "average_generate_latency": 6.630199999999999,
+  "average_validate_latency": 0.0,
   "retrieval_accuracy": 100.0,
   "results": [
     {
       "question": "What is China's GDP growth forecast for 2026?",
       "pass": true,
-      "latency": 120.85659217834473,
-      "answer": "China's GDP growth forecast for 2026 is 4.6 percent, revised upward by 0.2 percentage point from the October 2025 WEO projection.",
+      "latency": 12.972538948059082,
+      "answer": "China's GDP growth is forecast to be 4.6 percent in 2026.",
       "retrieval_pass": true,
+      "retrieved_sources": [
+        "reg_devs_outlooks.pdf",
+        "world_economic_outlook.pdf",
+        "world_economic_outlook.pdf",
+        "world_economic_outlook.pdf"
+      ],
+      "rewrite_cache_enabled": true,
+      "rewrite_cache_hit": true,
+      "node_timings": [
+        {
+          "node": "rewrite_query",
+          "elapsed_seconds": 0.001,
+          "retry_count": 0
+        },
+        {
+          "node": "retrieve",
+          "elapsed_seconds": 2.409,
+          "retry_count": 0
+        },
+        {
+          "node": "generate",
+          "elapsed_seconds": 10.511,
+          "retry_count": 0
+        }
+      ],
+      "rewrite_latency": 0.001,
+      "retrieve_latency": 2.409,
+      "generate_latency": 10.511,
+      "validate_latency": 0,
       "expected": "4.6"
     },
     {
       "question": "What is South Asia growth forecast for 2026?",
       "pass": true,
-      "latency": 44.54766893386841,
-      "answer": "The South Asia growth forecast for 2026 is 5.6%.",
+      "latency": 9.017257928848267,
+      "answer": "South Asia's growth is forecast at 5.6 percent for 2026.",
       "retrieval_pass": true,
+      "retrieved_sources": [
+        "reg_devs_outlooks.pdf",
+        "reg_devs_outlooks.pdf",
+        "reg_devs_outlooks.pdf",
+        "world_economic_outlook.pdf"
+      ],
+      "rewrite_cache_enabled": true,
+      "rewrite_cache_hit": true,
+      "node_timings": [
+        {
+          "node": "rewrite_query",
+          "elapsed_seconds": 0.001,
+          "retry_count": 0
+        },
+        {
+          "node": "retrieve",
+          "elapsed_seconds": 3.181,
+          "retry_count": 0
+        },
+        {
+          "node": "generate",
+          "elapsed_seconds": 5.788,
+          "retry_count": 0
+        }
+      ],
+      "rewrite_latency": 0.001,
+      "retrieve_latency": 3.181,
+      "generate_latency": 5.788,
+      "validate_latency": 0,
       "expected": "5.6"
     },
     {
       "question": "What is global inflation forecast for 2026?",
       "pass": true,
-      "latency": 46.030251026153564,
-      "answer": "The global inflation forecast for 2026 is 3.8%.",
+      "latency": 8.60244607925415,
+      "answer": "Global inflation is forecast to fall to 3.8 percent in 2026.",
       "retrieval_pass": true,
+      "retrieved_sources": [
+        "world_economic_outlook.pdf",
+        "reg_devs_outlooks.pdf",
+        "world_economic_outlook.pdf",
+        "world_economic_outlook.pdf"
+      ],
+      "rewrite_cache_enabled": true,
+      "rewrite_cache_hit": true,
+      "node_timings": [
+        {
+          "node": "rewrite_query",
+          "elapsed_seconds": 0.001,
+          "retry_count": 0
+        },
+        {
+          "node": "retrieve",
+          "elapsed_seconds": 3.257,
+          "retry_count": 0
+        },
+        {
+          "node": "generate",
+          "elapsed_seconds": 5.313,
+          "retry_count": 0
+        }
+      ],
+      "rewrite_latency": 0.001,
+      "retrieve_latency": 3.257,
+      "generate_latency": 5.313,
+      "validate_latency": 0,
       "expected": "3.8"
     },
     {
       "question": "What is US growth forecast for 2026?",
       "pass": true,
-      "latency": 41.611411809921265,
+      "latency": 8.698838233947754,
       "answer": "The US growth forecast for 2026 is 2.4 percent.",
       "retrieval_pass": true,
+      "retrieved_sources": [
+        "world_economic_outlook.pdf",
+        "reg_devs_outlooks.pdf",
+        "world_economic_outlook.pdf",
+        "reg_devs_outlooks.pdf"
+      ],
+      "rewrite_cache_enabled": true,
+      "rewrite_cache_hit": true,
+      "node_timings": [
+        {
+          "node": "rewrite_query",
+          "elapsed_seconds": 0.001,
+          "retry_count": 0
+        },
+        {
+          "node": "retrieve",
+          "elapsed_seconds": 3.165,
+          "retry_count": 0
+        },
+        {
+          "node": "generate",
+          "elapsed_seconds": 5.496,
+          "retry_count": 0
+        }
+      ],
+      "rewrite_latency": 0.001,
+      "retrieve_latency": 3.165,
+      "generate_latency": 5.496,
+      "validate_latency": 0,
       "expected": "2.4"
     },
     {
       "question": "What is Africa growth forecast for 2026?",
       "pass": true,
-      "latency": 56.9323468208313,
-      "answer": "Africa's growth forecast for 2026 is 4.0 percent.",
+      "latency": 10.168636798858643,
+      "answer": "Africa's growth is forecast to be 4.0 percent in 2026.",
       "retrieval_pass": true,
+      "retrieved_sources": [
+        "reg_devs_outlooks.pdf",
+        "reg_devs_outlooks.pdf",
+        "reg_devs_outlooks.pdf",
+        "reg_devs_outlooks.pdf"
+      ],
+      "rewrite_cache_enabled": true,
+      "rewrite_cache_hit": true,
+      "node_timings": [
+        {
+          "node": "rewrite_query",
+          "elapsed_seconds": 0.001,
+          "retry_count": 0
+        },
+        {
+          "node": "retrieve",
+          "elapsed_seconds": 4.066,
+          "retry_count": 0
+        },
+        {
+          "node": "generate",
+          "elapsed_seconds": 6.043,
+          "retry_count": 0
+        }
+      ],
+      "rewrite_latency": 0.001,
+      "retrieve_latency": 4.066,
+      "generate_latency": 6.043,
+      "validate_latency": 0,
       "expected": "4.0"
     }
   ]

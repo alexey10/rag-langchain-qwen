@@ -4,6 +4,8 @@ DATA_PATH = "data/docs"
 CHROMA_PATH = "chroma_db"
 
 EMBEDDING_MODEL = "BAAI/bge-large-en"
+#LLM_MODEL = "deepseek-r1:8b"
+#LLM_MODEL = "qwen3.5:9b"
 LLM_MODEL = "qwen3"
 LLM_NUM_PREDICT = int(
     os.getenv("LLM_NUM_PREDICT", "128")
