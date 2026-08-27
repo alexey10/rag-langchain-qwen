@@ -33,6 +33,3 @@ REWRITE_CACHE_ENABLED = (
 )
 
 DEEPVERIFIED_API_KEY = os.getenv("DEEPVERIFIED_API_KEY")
-
-if DEEPVERIFIED_API_KEY is None:
-    raise RuntimeError("DEEPVERIFIED_API_KEY is not configured")
