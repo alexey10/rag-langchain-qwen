@@ -1,5 +1,8 @@
 import os
 
+from dotenv import load_dotenv
+load_dotenv()
+
 DATA_PATH = "data/docs"
 CHROMA_PATH = "chroma_db"
 
@@ -28,3 +31,8 @@ REWRITE_CACHE_ENABLED = (
     os.getenv("REWRITE_CACHE_ENABLED", "true").lower()
     == "true"
 )
+
+DEEPVERIFIED_API_KEY = os.getenv("DEEPVERIFIED_API_KEY")
+
+if DEEPVERIFIED_API_KEY is None:
+    raise RuntimeError("DEEPVERIFIED_API_KEY is not configured")

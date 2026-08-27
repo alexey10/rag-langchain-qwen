@@ -1,7 +1,8 @@
 from uuid import uuid4
 
-from fastapi import APIRouter, HTTPException
+from fastapi import APIRouter, HTTPException, Depends
 
+from app.api.auth import verify_api_key
 from app.api.schemas import ChatRequest, ChatResponse, ModelsResponse, ModelInfo
 from app.gateway.router import get_provider
 from app.gateway.models import MODELS
@@ -9,7 +10,7 @@ from app.gateway.models import MODELS
 router = APIRouter(prefix="/v1")
 
 
-@router.post("/chat", response_model=ChatResponse)
+@router.post("/chat", response_model=ChatResponse, dependencies=[Depends(verify_api_key)],)
 def chat(request: ChatRequest):
 
     try:
@@ -31,7 +32,7 @@ def chat(request: ChatRequest):
             detail=str(exc),
         )
 
-@router.get("/models", response_model=ModelsResponse)
+@router.get("/models", response_model=ModelsResponse, dependencies=[Depends(verify_api_key)],)
 def list_models():
     return {
         "models": [
