@@ -1,11 +1,12 @@
 from fastapi import FastAPI
-from fastapi.security import HTTPBearer
 from fastapi.openapi.utils import get_openapi
+from fastapi.responses import JSONResponse
+from slowapi import _rate_limit_exceeded_handler
+from slowapi.errors import RateLimitExceeded
 from app.api.routes import router
 from app.api.health import router as health_router
 from app.api.middleware import LoggingMiddleware
-
-security = HTTPBearer()
+from app.api.ratelimit import limiter
 
 app = FastAPI(
     title="deepVerified API",
@@ -13,8 +14,9 @@ app = FastAPI(
     description="AI API layer for RAG, Agents and LLMs",
 )
 
-app.add_middleware(LoggingMiddleware)  # must come after app is created
-
+app.state.limiter = limiter
+app.add_exception_handler(RateLimitExceeded, _rate_limit_exceeded_handler)
+app.add_middleware(LoggingMiddleware)
 app.include_router(router)
 app.include_router(health_router)
 

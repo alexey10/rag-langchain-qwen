@@ -1,26 +1,25 @@
 from uuid import uuid4
-from fastapi import APIRouter, HTTPException, Depends
-from fastapi.security import HTTPBearer
+from fastapi import APIRouter, HTTPException, Depends, Request
 from app.api.auth import verify_api_key
 from app.api.schemas import ChatRequest, ChatResponse, ModelsResponse, ModelInfo
+from app.api.ratelimit import limiter
 from app.gateway.router import get_provider
 from app.gateway.models import MODELS
-
-security = HTTPBearer()
 
 router = APIRouter(prefix="/v1")
 
 
 @router.post("/chat", response_model=ChatResponse, dependencies=[Depends(verify_api_key)])
-def chat(request: ChatRequest):
+@limiter.limit("100/day")
+def chat(request: Request, body: ChatRequest):
     try:
-        provider = get_provider(request.model)
+        provider = get_provider(body.model)
         response = provider.chat(
-            messages=request.messages,
+            messages=body.messages,
         )
         return {
             "id": f"chatcmpl-{uuid4()}",
-            "model": request.model,
+            "model": body.model,
             "content": response,
         }
     except ValueError as exc:
@@ -31,7 +30,8 @@ def chat(request: ChatRequest):
 
 
 @router.get("/models", response_model=ModelsResponse, dependencies=[Depends(verify_api_key)])
-def list_models():
+@limiter.limit("1000/day")
+def list_models(request: Request):
     return {
         "models": [
             {"id": model_id, **meta}
