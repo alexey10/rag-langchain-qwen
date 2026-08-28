@@ -3,6 +3,7 @@ from fastapi.security import HTTPBearer
 from fastapi.openapi.utils import get_openapi
 from app.api.routes import router
 from app.api.health import router as health_router
+from app.api.middleware import LoggingMiddleware
 
 security = HTTPBearer()
 
@@ -11,6 +12,8 @@ app = FastAPI(
     version="1.0.0",
     description="AI API layer for RAG, Agents and LLMs",
 )
+
+app.add_middleware(LoggingMiddleware)  # must come after app is created
 
 app.include_router(router)
 app.include_router(health_router)

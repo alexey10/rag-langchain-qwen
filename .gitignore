@@ -26,3 +26,5 @@ chroma_db/
 .streamlit/
 
 docs/openapi.json
+alloy/
+data-alloy/
