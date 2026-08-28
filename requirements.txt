@@ -17,3 +17,4 @@ langfuse
 python-dotenv
 langchain-chroma
 langchain_huggingface
+slowapi
