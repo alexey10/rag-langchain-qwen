@@ -9,11 +9,9 @@ from starlette.middleware.base import BaseHTTPMiddleware
 LOG_DIR = "/tmp/deepverified"
 os.makedirs(LOG_DIR, exist_ok=True)
 
-# File handler for Grafana Alloy to tail
 file_handler = logging.FileHandler(f"{LOG_DIR}/api.log")
 file_handler.setFormatter(logging.Formatter("%(message)s"))
 
-# Stdout handler
 stream_handler = logging.StreamHandler()
 stream_handler.setFormatter(logging.Formatter("%(message)s"))
 
@@ -44,6 +42,7 @@ class LoggingMiddleware(BaseHTTPMiddleware):
             logger.info(json.dumps({
                 "event": "request_completed",
                 "request_id": request_id,
+                "client_id": getattr(request.state, "client_id", "unknown"),
                 "method": request.method,
                 "path": request.url.path,
                 "status_code": response.status_code,
@@ -59,6 +58,7 @@ class LoggingMiddleware(BaseHTTPMiddleware):
             logger.error(json.dumps({
                 "event": "request_failed",
                 "request_id": request_id,
+                "client_id": getattr(request.state, "client_id", "unknown"),
                 "method": request.method,
                 "path": request.url.path,
                 "latency_ms": latency_ms,
