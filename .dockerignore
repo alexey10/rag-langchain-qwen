@@ -1,0 +1,19 @@
+.git
+.github
+venv
+**pycache**
+*.pyc
+.DS_Store
+
+.env
+
+chroma_db
+data
+logs
+
+Demo Example.png
+
+notes
+data-alloy
+alloy
+
