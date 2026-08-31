@@ -1,0 +1,8 @@
+fastapi==0.141.1
+uvicorn==0.48.0
+python-dotenv
+slowapi
+langchain-core
+langchain-ollama
+langsmith
+langfuse
