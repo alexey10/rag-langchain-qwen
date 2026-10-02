@@ -21,11 +21,11 @@ from dotenv import load_dotenv
 load_dotenv()
 
 # LangSmith config (MUST be before LangChain usage)
-os.environ["LANGCHAIN_TRACING_V2"] = "true"
-os.environ["LANGCHAIN_PROJECT"] = os.getenv("LANGCHAIN_PROJECT", "rag-demo")
+from app.observability.langsmith_config import (
+    configure_langsmith,
+)
 
-if not os.getenv("LANGCHAIN_API_KEY"):
-    raise ValueError("Missing LANGCHAIN_API_KEY in environment")
+configure_langsmith()
 
 from app.graph.rag_graph import rag_graph
 from app.ingestion.ingest import run_ingestion

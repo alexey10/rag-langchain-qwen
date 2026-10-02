@@ -3,6 +3,13 @@ from fastapi.openapi.utils import get_openapi
 from fastapi.responses import JSONResponse
 from slowapi import _rate_limit_exceeded_handler
 from slowapi.errors import RateLimitExceeded
+
+from app.observability.langsmith_config import (
+    configure_langsmith,
+)
+
+configure_langsmith()
+
 from app.api.routes import router
 from app.api.health import router as health_router
 from app.api.middleware import LoggingMiddleware
