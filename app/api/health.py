@@ -19,27 +19,22 @@ def readiness():
         response = ollama.list()
         available_models = [model.model for model in response.models]
 
-        unavailable = []
+        required_model = MODELS["qwen"]["model"]
 
-        for model_id, config in MODELS.items():
-            runtime_model = config["model"]
-
-            if runtime_model not in available_models:
-                unavailable.append(runtime_model)
-
-        if unavailable:
+        if required_model not in available_models:
             return JSONResponse(
                 status_code=503,
                 content={
                     "status": "not_ready",
-                    "reason": "One or more configured models are unavailable",
-                    "unavailable_models": unavailable,
+                    "reason": "Required model is unavailable",
+                    "required_model": required_model,
                 },
             )
 
         return {
             "status": "ready",
             "models": list(MODELS.keys()),
+            "available_runtime_models": available_models,
         }
 
     except Exception:

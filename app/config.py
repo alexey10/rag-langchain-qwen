@@ -6,6 +6,11 @@ load_dotenv()
 DATA_PATH = "data/docs"
 CHROMA_PATH = "chroma_db"
 
+OLLAMA_HOST = os.getenv(
+    "OLLAMA_HOST",
+    "127.0.0.1:11434",
+)
+
 EMBEDDING_MODEL = "BAAI/bge-large-en"
 #LLM_MODEL = "deepseek-r1:8b"
 #LLM_MODEL = "qwen3.5:9b"
