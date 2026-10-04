@@ -1,6 +1,6 @@
 from pydantic import BaseModel
 from typing import List
-from typing import Dict, Any
+
 
 class ChatMessage(BaseModel):
     role: str
@@ -10,6 +10,7 @@ class ChatMessage(BaseModel):
 class ChatRequest(BaseModel):
     model: str = "qwen"
     messages: List[ChatMessage]
+    knowledge_base_id: str | None = None
 
 
 class ChatResponse(BaseModel):
@@ -17,10 +18,12 @@ class ChatResponse(BaseModel):
     model: str
     content: str
 
+
 class ModelInfo(BaseModel):
     id: str
     provider: str
     model: str
+
 
 class ModelsResponse(BaseModel):
     models: List[ModelInfo]

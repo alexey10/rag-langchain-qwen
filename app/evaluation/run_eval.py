@@ -4,6 +4,13 @@ import os
 import threading
 from datetime import datetime
 from app.config import REWRITE_CACHE_ENABLED
+
+from app.observability.langsmith_config import (
+    configure_langsmith,
+)
+
+configure_langsmith()
+
 from app.graph.rag_graph import rag_graph
 
 NODE_LATENCY_KEYS = {
