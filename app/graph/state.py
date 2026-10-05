@@ -16,3 +16,4 @@ class RAGState(TypedDict):
     enable_rewrite: bool
     rewrite_cache_hit: bool
     knowledge_base_id: NotRequired[str]
+    model: NotRequired[str]

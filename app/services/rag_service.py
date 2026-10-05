@@ -1,4 +1,5 @@
 from app.graph.rag_graph import rag_graph
+from app.gateway.models import MODELS
 
 
 class RAGService:
@@ -7,6 +8,7 @@ class RAGService:
         self,
         messages,
         knowledge_base_id,
+        model,
     ):
         if knowledge_base_id != "default":
             raise ValueError(
@@ -24,11 +26,29 @@ class RAGService:
                 "At least one user message is required"
             )
 
+        model_id = model.lower()
+
+        if model_id not in MODELS:
+            raise ValueError(
+                f"Unsupported model: {model}"
+            )
+
+        model_config = MODELS[model_id]
+
+        if model_config["provider"] != "ollama":
+            raise ValueError(
+                f"Unsupported provider: "
+                f"{model_config['provider']}"
+            )
+
+        runtime_model = model_config["model"]
+
         question = user_messages[-1].content
 
         result = rag_graph.invoke({
             "question": question,
             "knowledge_base_id": knowledge_base_id,
+            "model": runtime_model,
             "enable_rewrite": True,
             "enable_validation": True,
         })

@@ -32,6 +32,7 @@ def chat(request: ChatRequest):
             content = rag_service.answer(
                 messages=request.messages,
                 knowledge_base_id=request.knowledge_base_id,
+                model=request.model,
             )
         else:
             provider = get_provider(request.model)

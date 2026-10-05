@@ -1,20 +1,20 @@
 {
-  "timestamp": "2026-10-04T10:13:24.027470",
+  "timestamp": "2026-10-05T16:55:21.004395",
   "questions": 5,
   "passed": 5,
   "failed": 0,
   "accuracy": 100.0,
-  "average_latency": 4.210979843139649,
-  "average_rewrite_latency": 0.0004,
-  "average_retrieve_latency": 0.7736000000000001,
-  "average_generate_latency": 3.4274,
+  "average_latency": 8.27548680305481,
+  "average_rewrite_latency": 0.0012000000000000001,
+  "average_retrieve_latency": 3.1288,
+  "average_generate_latency": 5.1212,
   "average_validate_latency": 0.0,
   "retrieval_accuracy": 100.0,
   "results": [
     {
       "question": "What is China's GDP growth forecast for 2026?",
       "pass": true,
-      "latency": 6.114192247390747,
+      "latency": 7.360432147979736,
       "answer": "China's GDP growth is forecast to be 4.6 percent in 2026.",
       "retrieval_pass": true,
       "retrieved_sources": [
@@ -33,25 +33,25 @@
         },
         {
           "node": "retrieve",
-          "elapsed_seconds": 2.886,
+          "elapsed_seconds": 3.825,
           "retry_count": 0
         },
         {
           "node": "generate",
-          "elapsed_seconds": 3.212,
+          "elapsed_seconds": 3.515,
           "retry_count": 0
         }
       ],
       "rewrite_latency": 0.001,
-      "retrieve_latency": 2.886,
-      "generate_latency": 3.212,
+      "retrieve_latency": 3.825,
+      "generate_latency": 3.515,
       "validate_latency": 0,
       "expected": "4.6"
     },
     {
       "question": "What is South Asia growth forecast for 2026?",
       "pass": true,
-      "latency": 4.065013885498047,
+      "latency": 8.30765986442566,
       "answer": "South Asia's growth is forecast at 5.6 percent for 2026.",
       "retrieval_pass": true,
       "retrieved_sources": [
@@ -70,25 +70,25 @@
         },
         {
           "node": "retrieve",
-          "elapsed_seconds": 0.514,
+          "elapsed_seconds": 2.772,
           "retry_count": 0
         },
         {
           "node": "generate",
-          "elapsed_seconds": 3.544,
+          "elapsed_seconds": 5.513,
           "retry_count": 0
         }
       ],
       "rewrite_latency": 0.001,
-      "retrieve_latency": 0.514,
-      "generate_latency": 3.544,
+      "retrieve_latency": 2.772,
+      "generate_latency": 5.513,
       "validate_latency": 0,
       "expected": "5.6"
     },
     {
       "question": "What is global inflation forecast for 2026?",
       "pass": true,
-      "latency": 3.4893171787261963,
+      "latency": 8.925096035003662,
       "answer": "Global inflation is forecast to fall to 3.8 percent in 2026.",
       "retrieval_pass": true,
       "retrieved_sources": [
@@ -102,30 +102,30 @@
       "node_timings": [
         {
           "node": "rewrite_query",
-          "elapsed_seconds": 0.0,
+          "elapsed_seconds": 0.001,
           "retry_count": 0
         },
         {
           "node": "retrieve",
-          "elapsed_seconds": 0.162,
+          "elapsed_seconds": 3.38,
           "retry_count": 0
         },
         {
           "node": "generate",
-          "elapsed_seconds": 3.323,
+          "elapsed_seconds": 5.515,
           "retry_count": 0
         }
       ],
-      "rewrite_latency": 0.0,
-      "retrieve_latency": 0.162,
-      "generate_latency": 3.323,
+      "rewrite_latency": 0.001,
+      "retrieve_latency": 3.38,
+      "generate_latency": 5.515,
       "validate_latency": 0,
       "expected": "3.8"
     },
     {
       "question": "What is US growth forecast for 2026?",
       "pass": true,
-      "latency": 3.500614881515503,
+      "latency": 8.68183183670044,
       "answer": "The US growth forecast for 2026 is 2.4 percent.",
       "retrieval_pass": true,
       "retrieved_sources": [
@@ -139,30 +139,30 @@
       "node_timings": [
         {
           "node": "rewrite_query",
-          "elapsed_seconds": 0.0,
+          "elapsed_seconds": 0.002,
           "retry_count": 0
         },
         {
           "node": "retrieve",
-          "elapsed_seconds": 0.145,
+          "elapsed_seconds": 3.213,
           "retry_count": 0
         },
         {
           "node": "generate",
-          "elapsed_seconds": 3.352,
+          "elapsed_seconds": 5.433,
           "retry_count": 0
         }
       ],
-      "rewrite_latency": 0.0,
-      "retrieve_latency": 0.145,
-      "generate_latency": 3.352,
+      "rewrite_latency": 0.002,
+      "retrieve_latency": 3.213,
+      "generate_latency": 5.433,
       "validate_latency": 0,
       "expected": "2.4"
     },
     {
       "question": "What is Africa growth forecast for 2026?",
       "pass": true,
-      "latency": 3.885761022567749,
+      "latency": 8.10241413116455,
       "answer": "Africa's growth is forecast to be 4.0 percent in 2026.",
       "retrieval_pass": true,
       "retrieved_sources": [
@@ -176,23 +176,23 @@
       "node_timings": [
         {
           "node": "rewrite_query",
-          "elapsed_seconds": 0.0,
+          "elapsed_seconds": 0.001,
           "retry_count": 0
         },
         {
           "node": "retrieve",
-          "elapsed_seconds": 0.161,
+          "elapsed_seconds": 2.454,
           "retry_count": 0
         },
         {
           "node": "generate",
-          "elapsed_seconds": 3.706,
+          "elapsed_seconds": 5.63,
           "retry_count": 0
         }
       ],
-      "rewrite_latency": 0.0,
-      "retrieve_latency": 0.161,
-      "generate_latency": 3.706,
+      "rewrite_latency": 0.001,
+      "retrieve_latency": 2.454,
+      "generate_latency": 5.63,
       "validate_latency": 0,
       "expected": "4.0"
     }
