@@ -1,5 +1,6 @@
-from typing import Any, TypedDict, List
+from typing import Any, TypedDict, List, NotRequired
 from langchain_core.documents import Document
+
 
 class RAGState(TypedDict):
     question: str
@@ -14,3 +15,4 @@ class RAGState(TypedDict):
     enable_validation: bool
     enable_rewrite: bool
     rewrite_cache_hit: bool
+    knowledge_base_id: NotRequired[str]

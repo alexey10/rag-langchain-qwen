@@ -5,7 +5,6 @@ from langsmith import traceable
 from app.retrieval.retriever import get_retriever
 from app.llm.qwen_llm import get_llm
 
-retriever = get_retriever()
 llm = get_llm()
 
 from app.prompts.rewrite_prompt import (
@@ -37,9 +36,18 @@ from app.utils.rewrite_cache import (
 def retrieve(state):
 
     query = state.get(
-    "rewritten_question",
-    state["question"]
-	)
+        "rewritten_question",
+        state["question"],
+    )
+
+    knowledge_base_id = state.get(
+        "knowledge_base_id",
+        "default",
+    )
+
+    retriever = get_retriever(
+        knowledge_base_id
+    )
 
     docs = retriever.invoke(query)
 

@@ -28,6 +28,7 @@ class RAGService:
 
         result = rag_graph.invoke({
             "question": question,
+            "knowledge_base_id": knowledge_base_id,
             "enable_rewrite": True,
             "enable_validation": True,
         })
