@@ -23,6 +23,7 @@ class ModelInfo(BaseModel):
     id: str
     provider: str
     model: str
+    available: bool
 
 
 class ModelsResponse(BaseModel):

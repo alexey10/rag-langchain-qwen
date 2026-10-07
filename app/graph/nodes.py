@@ -5,8 +5,15 @@ from langsmith import traceable
 from app.retrieval.retriever import get_retriever
 from app.llm.qwen_llm import get_llm
 
-retriever = get_retriever()
 llm = get_llm()
+
+def get_state_llm(state):
+    model = state.get("model")
+
+    if model:
+        return get_llm(model)
+
+    return llm
 
 from app.prompts.rewrite_prompt import (
     get_rewrite_prompt
@@ -37,9 +44,18 @@ from app.utils.rewrite_cache import (
 def retrieve(state):
 
     query = state.get(
-    "rewritten_question",
-    state["question"]
-	)
+        "rewritten_question",
+        state["question"],
+    )
+
+    knowledge_base_id = state.get(
+        "knowledge_base_id",
+        "default",
+    )
+
+    retriever = get_retriever(
+        knowledge_base_id
+    )
 
     docs = retriever.invoke(query)
 
@@ -85,7 +101,9 @@ def generate(state):
         state["question"]
     )
 
-    answer = llm.invoke(prompt)
+    state_llm = get_state_llm(state)
+
+    answer = state_llm.invoke(prompt)
 
     return {
         "answer": answer
@@ -103,7 +121,9 @@ def validate(state):
         state["answer"]
     )
 
-    result = llm.invoke(prompt)
+    state_llm = get_state_llm(state)
+
+    result = state_llm.invoke(prompt)
 
     retry_count = state.get(
         "retry_count",
@@ -148,7 +168,9 @@ def rewrite_query(state):
         question
     )
 
-    rewritten = llm.invoke(prompt)
+    state_llm = get_state_llm(state)
+
+    rewritten = state_llm.invoke(prompt)
     rewritten = rewritten.strip()
     save_cached_rewrite(
         question,

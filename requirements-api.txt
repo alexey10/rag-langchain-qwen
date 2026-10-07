@@ -6,3 +6,9 @@ langchain-core
 langchain-ollama
 langsmith
 langfuse
+langgraph
+langchain-chroma
+langchain-huggingface
+chromadb
+ollama
+sentence-transformers
