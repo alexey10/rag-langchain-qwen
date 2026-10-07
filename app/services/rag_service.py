@@ -1,5 +1,5 @@
 from app.graph.rag_graph import rag_graph
-from app.gateway.models import MODELS
+from app.gateway.availability import get_available_model_config
 
 
 class RAGService:
@@ -26,14 +26,7 @@ class RAGService:
                 "At least one user message is required"
             )
 
-        model_id = model.lower()
-
-        if model_id not in MODELS:
-            raise ValueError(
-                f"Unsupported model: {model}"
-            )
-
-        model_config = MODELS[model_id]
+        model_config = get_available_model_config(model)
 
         if model_config["provider"] != "ollama":
             raise ValueError(

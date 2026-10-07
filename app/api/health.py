@@ -1,6 +1,10 @@
 from fastapi import APIRouter
 from fastapi.responses import JSONResponse
-import ollama
+
+from app.gateway.availability import (
+    OllamaUnavailableError,
+    get_available_runtime_models,
+)
 from app.gateway.models import MODELS
 
 router = APIRouter()
@@ -16,8 +20,7 @@ def health():
 @router.get("/ready")
 def readiness():
     try:
-        response = ollama.list()
-        available_models = [model.model for model in response.models]
+        available_models = get_available_runtime_models()
 
         required_model = MODELS["qwen"]["model"]
 
@@ -34,10 +37,10 @@ def readiness():
         return {
             "status": "ready",
             "models": list(MODELS.keys()),
-            "available_runtime_models": available_models,
+            "available_runtime_models": sorted(available_models),
         }
 
-    except Exception:
+    except OllamaUnavailableError:
         return JSONResponse(
             status_code=503,
             content={

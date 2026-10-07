@@ -10,7 +10,12 @@ from app.api.schemas import (
     ModelsResponse,
 )
 from app.gateway.router import get_provider
-from app.gateway.models import MODELS
+from app.gateway.availability import (
+    ModelUnavailableError,
+    OllamaUnavailableError,
+    get_available_model_config,
+    get_model_catalog,
+)
 from app.services.rag_service import RAGService
 
 
@@ -35,6 +40,7 @@ def chat(request: ChatRequest):
                 model=request.model,
             )
         else:
+            get_available_model_config(request.model)
             provider = get_provider(request.model)
 
             content = provider.chat(
@@ -52,6 +58,16 @@ def chat(request: ChatRequest):
             status_code=400,
             detail=str(exc),
         )
+    except ModelUnavailableError as exc:
+        raise HTTPException(
+            status_code=503,
+            detail=str(exc),
+        )
+    except OllamaUnavailableError as exc:
+        raise HTTPException(
+            status_code=503,
+            detail=str(exc),
+        )
 
 
 @router.get(
@@ -60,9 +76,10 @@ def chat(request: ChatRequest):
     dependencies=[Depends(verify_api_key)],
 )
 def list_models():
-    return {
-        "models": [
-            {"id": model_id, **meta}
-            for model_id, meta in MODELS.items()
-        ]
-    }
+    try:
+        return {"models": get_model_catalog()}
+    except OllamaUnavailableError as exc:
+        raise HTTPException(
+            status_code=503,
+            detail=str(exc),
+        )
