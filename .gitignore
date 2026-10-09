@@ -28,3 +28,5 @@ chroma_db/
 docs/openapi.json
 alloy/
 data-alloy/
+chroma_db_backup_*/
+data/evaluation/results/latest_eval.json
