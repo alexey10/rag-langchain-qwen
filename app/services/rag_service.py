@@ -10,7 +10,13 @@ class RAGService:
         knowledge_base_id,
         model,
     ):
-        if knowledge_base_id != "default":
+
+        allowed_knowledge_bases = {
+        "default",
+        "test-kb",
+        }
+
+        if knowledge_base_id not in allowed_knowledge_bases:
             raise ValueError(
                 f"Unsupported knowledge base: {knowledge_base_id}"
             )
