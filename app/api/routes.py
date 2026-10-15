@@ -3,6 +3,11 @@ from uuid import uuid4
 from fastapi import APIRouter, HTTPException, Depends
 from fastapi.security import HTTPBearer
 
+from app.api.client_registry import (
+    APIClient,
+    KnowledgeBaseAccessError,
+)
+
 from app.api.auth import verify_api_key
 from app.api.schemas import (
     ChatRequest,
@@ -29,15 +34,15 @@ rag_service = RAGService()
 @router.post(
     "/chat",
     response_model=ChatResponse,
-    dependencies=[Depends(verify_api_key)],
 )
-def chat(request: ChatRequest):
+def chat(request: ChatRequest,client: APIClient = Depends(verify_api_key),):
     try:
         if request.knowledge_base_id:
             content = rag_service.answer(
                 messages=request.messages,
                 knowledge_base_id=request.knowledge_base_id,
                 model=request.model,
+                client=client,
             )
         else:
             get_available_model_config(request.model)
@@ -67,6 +72,11 @@ def chat(request: ChatRequest):
         raise HTTPException(
             status_code=503,
             detail=str(exc),
+        )
+    except KnowledgeBaseAccessError:
+        raise HTTPException(
+            status_code=404,
+            detail="Knowledge base not found",
         )
 
 

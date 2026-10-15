@@ -1,21 +1,22 @@
 from fastapi import Header, HTTPException, Request
-from app.config import DEEPVERIFIED_API_KEY
+
+from app.api.client_registry import (
+    APIClient,
+    ClientRegistryConfigurationError,
+    get_client_by_api_key,
+)
 
 
 def verify_api_key(
     request: Request,
     authorization: str | None = Header(default=None),
-):
-    if not DEEPVERIFIED_API_KEY:
-        raise HTTPException(
-            status_code=500,
-            detail="API key not configured on server",
-        )
+) -> APIClient:
     if not authorization:
         raise HTTPException(
             status_code=401,
             detail="Missing API key",
         )
+
     if not authorization.startswith("Bearer "):
         raise HTTPException(
             status_code=401,
@@ -24,12 +25,21 @@ def verify_api_key(
 
     api_key = authorization.removeprefix("Bearer ").strip()
 
-    if api_key != DEEPVERIFIED_API_KEY:
+    try:
+        client = get_client_by_api_key(api_key)
+    except ClientRegistryConfigurationError:
+        raise HTTPException(
+            status_code=500,
+            detail="API client registry is not configured",
+        )
+
+    if client is None:
         raise HTTPException(
             status_code=401,
             detail="Invalid API key",
         )
 
-    # Set client identity after successful validation
-    # Replace "dev_local" with a key→client registry when multi-tenant
-    request.state.client_id = "dev_local"
+    # Preserve client identity for structured request logging.
+    request.state.client_id = client.client_id
+
+    return client
