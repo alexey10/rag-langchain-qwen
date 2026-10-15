@@ -1,4 +1,9 @@
 from app.graph.rag_graph import rag_graph
+
+from app.api.client_registry import (
+    APIClient,
+    authorize_knowledge_base,
+)
 from app.gateway.availability import get_available_model_config
 
 
@@ -9,11 +14,13 @@ class RAGService:
         messages,
         knowledge_base_id,
         model,
+        client: APIClient,
     ):
-        if knowledge_base_id != "default":
-            raise ValueError(
-                f"Unsupported knowledge base: {knowledge_base_id}"
-            )
+        # Authorization must happen before graph invocation.
+        authorize_knowledge_base(
+            client,
+            knowledge_base_id,
+        )
 
         user_messages = [
             message
@@ -30,12 +37,10 @@ class RAGService:
 
         if model_config["provider"] != "ollama":
             raise ValueError(
-                f"Unsupported provider: "
-                f"{model_config['provider']}"
+                f"Unsupported provider: {model_config['provider']}"
             )
 
         runtime_model = model_config["model"]
-
         question = user_messages[-1].content
 
         result = rag_graph.invoke({
