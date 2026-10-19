@@ -38,3 +38,8 @@ REWRITE_CACHE_ENABLED = (
 )
 
 DEEPVERIFIED_API_KEY = os.getenv("DEEPVERIFIED_API_KEY")
+
+KNOWLEDGE_BASE_DB_PATH = os.getenv(
+    "KNOWLEDGE_BASE_DB_PATH",
+    "data/knowledge_bases.sqlite3",
+)

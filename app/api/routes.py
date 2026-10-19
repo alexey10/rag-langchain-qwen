@@ -13,6 +13,7 @@ from app.api.schemas import (
     ChatRequest,
     ChatResponse,
     ModelsResponse,
+    KnowledgeBasesResponse,
 )
 from app.gateway.router import get_provider
 from app.gateway.availability import (
@@ -23,6 +24,9 @@ from app.gateway.availability import (
 )
 from app.services.rag_service import RAGService
 
+from app.api.knowledge_base_registry import (
+    list_knowledge_bases,
+)
 
 security = HTTPBearer()
 
@@ -93,3 +97,25 @@ def list_models():
             status_code=503,
             detail=str(exc),
         )
+
+@router.get(
+    "/knowledge-bases",
+    response_model=KnowledgeBasesResponse,
+)
+def list_client_knowledge_bases(
+    client: APIClient = Depends(verify_api_key),
+):
+    active_knowledge_bases = list_knowledge_bases(
+        status="active"
+    )
+
+    return {
+        "knowledge_bases": [
+            {
+                "id": kb.id,
+                "name": kb.name,
+            }
+            for kb in active_knowledge_bases
+            if kb.id in client.allowed_knowledge_bases
+        ]
+    }

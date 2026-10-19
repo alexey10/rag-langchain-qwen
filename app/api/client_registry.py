@@ -1,6 +1,8 @@
 from dataclasses import dataclass
 import os
 
+from app.api.knowledge_base_registry import get_knowledge_base
+
 from dotenv import load_dotenv
 
 load_dotenv()
@@ -12,15 +14,7 @@ class APIClient:
     allowed_knowledge_bases: frozenset[str]
 
 
-# Knowledge bases currently available in the local Chroma collection.
-KNOWN_KNOWLEDGE_BASES = frozenset({
-    "default",
-    "test-kb",
-})
 
-
-# Client policy configuration.
-# API key values are read from environment variables, not stored here.
 CLIENT_DEFINITIONS = {
     "dev_local": {
         "api_key_env": "DEEPVERIFIED_API_KEY",
@@ -46,13 +40,13 @@ class KnowledgeBaseAccessError(Exception):
     pass
 
 
-def get_configured_clients_by_api_key():
+def get_configured_clients_by_api_key() -> dict[str, APIClient]:
     clients = {}
 
     for client_id, config in CLIENT_DEFINITIONS.items():
         api_key = os.getenv(config["api_key_env"])
 
-        # A client is inactive until its API key is configured.
+        # A client remains inactive until its key is configured.
         if not api_key:
             continue
 
@@ -71,7 +65,7 @@ def get_configured_clients_by_api_key():
     return clients
 
 
-def get_client_by_api_key(api_key):
+def get_client_by_api_key(api_key: str) -> APIClient | None:
     clients = get_configured_clients_by_api_key()
 
     if not clients:
@@ -81,11 +75,19 @@ def get_client_by_api_key(api_key):
 
     return clients.get(api_key)
 
+def authorize_knowledge_base(
+    client: APIClient,
+    knowledge_base_id: str,
+) -> None:
+    knowledge_base = get_knowledge_base(
+        knowledge_base_id
+    )
 
-def authorize_knowledge_base(client, knowledge_base_id):
-    # Treat unknown and unauthorized KBs identically.
     if (
-        knowledge_base_id not in KNOWN_KNOWLEDGE_BASES
-        or knowledge_base_id not in client.allowed_knowledge_bases
+        knowledge_base is None
+        or knowledge_base.status != "active"
+        or knowledge_base_id
+        not in client.allowed_knowledge_bases
     ):
         raise KnowledgeBaseAccessError()
+
