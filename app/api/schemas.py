@@ -28,3 +28,12 @@ class ModelInfo(BaseModel):
 
 class ModelsResponse(BaseModel):
     models: List[ModelInfo]
+
+
+class KnowledgeBaseInfo(BaseModel):
+    id: str
+    name: str
+
+
+class KnowledgeBasesResponse(BaseModel):
+    knowledge_bases: List[KnowledgeBaseInfo]

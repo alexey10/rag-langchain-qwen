@@ -39,7 +39,6 @@ def verify_api_key(
             detail="Invalid API key",
         )
 
-    # Preserve client identity for structured request logging.
     request.state.client_id = client.client_id
 
     return client
