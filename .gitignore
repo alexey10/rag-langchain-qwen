@@ -30,3 +30,6 @@ alloy/
 data-alloy/
 chroma_db_backup_*/
 data/evaluation/results/latest_eval.json
+data/knowledge_bases.sqlite3
+
+
