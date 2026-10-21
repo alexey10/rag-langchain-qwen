@@ -18,3 +18,4 @@ python-dotenv
 langchain-chroma
 langchain_huggingface
 slowapi
+python-multipart==0.0.30
