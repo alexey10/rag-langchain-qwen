@@ -291,3 +291,39 @@ def list_document_records(
         )
         for row in rows
     ]
+
+def get_document_storage_path(
+    document_id: str,
+    knowledge_base_id: str,
+) -> str | None:
+    initialize_registry()
+
+    with _connection() as conn:
+        row = conn.execute(
+            """
+            SELECT storage_path
+            FROM documents
+            WHERE id = ? AND knowledge_base_id = ?
+            """,
+            (document_id, knowledge_base_id),
+        ).fetchone()
+
+    return row["storage_path"] if row else None
+
+
+def delete_document_record(
+    document_id: str,
+    knowledge_base_id: str,
+) -> bool:
+    initialize_registry()
+
+    with _connection() as conn:
+        cursor = conn.execute(
+            """
+            DELETE FROM documents
+            WHERE id = ? AND knowledge_base_id = ?
+            """,
+            (document_id, knowledge_base_id),
+        )
+
+    return cursor.rowcount == 1

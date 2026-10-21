@@ -33,6 +33,12 @@ from app.services.rag_service import RAGService
 
 from app.api.knowledge_base_registry import (
     list_knowledge_bases,
+    create_document_record,
+    update_document_record_status,
+    list_document_records,
+    get_document_storage_path,
+    delete_document_record,
+    get_document_record,
 )
 
 from app.api.client_registry import authorize_knowledge_base
@@ -301,3 +307,91 @@ def list_knowledge_base_documents(
             for record in records
         ]
     }
+
+@router.delete(
+    "/knowledge-bases/{knowledge_base_id}/documents/{document_id}",
+    status_code=204,
+)
+def delete_knowledge_base_document(
+    knowledge_base_id: str,
+    document_id: str,
+    client: APIClient = Depends(verify_api_key),
+):
+    try:
+        authorize_knowledge_base(client, knowledge_base_id)
+    except KnowledgeBaseAccessError:
+        raise HTTPException(
+            status_code=404,
+            detail="Knowledge base not found",
+        )
+
+    record = get_document_record(document_id)
+
+    if (
+        record is None
+        or record.knowledge_base_id != knowledge_base_id
+    ):
+        raise HTTPException(
+            status_code=404,
+            detail="Document not found",
+        )
+
+    storage_path = get_document_storage_path(
+        document_id,
+        knowledge_base_id,
+    )
+
+    if storage_path is None:
+        raise HTTPException(
+            status_code=404,
+            detail="Document not found",
+        )
+
+    # Remove indexed chunks first. Retain the registry record if this fails.
+    try:
+        remove_document_chunks(document_id)
+    except Exception:
+        logging.exception(
+            "Failed to remove Chroma chunks for document_id=%s",
+            document_id,
+        )
+        raise HTTPException(
+            status_code=500,
+            detail="Failed to remove document chunks; document remains registered",
+        )
+
+    # Missing files are acceptable on retry.
+    try:
+        Path(storage_path).unlink(missing_ok=True)
+    except OSError:
+        logging.exception(
+            "Failed to remove stored file for document_id=%s",
+            document_id,
+        )
+        raise HTTPException(
+            status_code=500,
+            detail="Document chunks were removed but stored file cleanup failed",
+        )
+
+    try:
+        deleted = delete_document_record(
+            document_id,
+            knowledge_base_id,
+        )
+    except Exception:
+        logging.exception(
+            "Failed to delete registry record for document_id=%s",
+            document_id,
+        )
+        raise HTTPException(
+            status_code=500,
+            detail="Document files were cleaned up but registry deletion failed",
+        )
+
+    if not deleted:
+        raise HTTPException(
+            status_code=404,
+            detail="Document not found",
+        )
+
+    return None
