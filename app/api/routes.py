@@ -42,11 +42,6 @@ from app.api.knowledge_base_registry import (
 )
 
 from app.api.client_registry import authorize_knowledge_base
-from app.api.knowledge_base_registry import (
-    create_document_record,
-    update_document_record_status,
-    list_document_records,
-)
 from app.api.schemas import DocumentsResponse, DocumentInfo
 from app.config import DOCUMENT_STORAGE_PATH, MAX_DOCUMENT_UPLOAD_BYTES
 from app.ingestion.document_indexer import (
@@ -395,3 +390,114 @@ def delete_knowledge_base_document(
         )
 
     return None
+
+
+@router.post(
+    "/knowledge-bases/{knowledge_base_id}/documents/{document_id}/reindex",
+    response_model=DocumentInfo,
+)
+def reindex_knowledge_base_document(
+    knowledge_base_id: str,
+    document_id: str,
+    client: APIClient = Depends(verify_api_key),
+):
+    try:
+        authorize_knowledge_base(client, knowledge_base_id)
+    except KnowledgeBaseAccessError:
+        raise HTTPException(
+            status_code=404,
+            detail="Knowledge base not found",
+        )
+
+    record = get_document_record(document_id)
+
+    if (
+        record is None
+        or record.knowledge_base_id != knowledge_base_id
+    ):
+        raise HTTPException(
+            status_code=404,
+            detail="Document not found",
+        )
+
+    storage_path = get_document_storage_path(
+        document_id,
+        knowledge_base_id,
+    )
+
+    if storage_path is None or not Path(storage_path).is_file():
+        raise HTTPException(
+            status_code=500,
+            detail="Stored document file not found; cannot re-index",
+        )
+
+    # Mark processing before modifying the existing index.
+    try:
+        update_document_record_status(
+            document_id,
+            "processing",
+            chunk_count=0,
+        )
+    except Exception:
+        logging.exception(
+            "Failed to update document status before re-indexing; "
+            "document_id=%s",
+            document_id,
+        )
+        raise HTTPException(
+            status_code=500,
+            detail="Failed to update document status; re-indexing was not started",
+        )
+
+    try:
+        # Remove old chunks so re-indexing replaces, rather than duplicates, them.
+        remove_document_chunks(document_id)
+
+        chunk_count = index_pdf_document(
+            file_path=storage_path,
+            knowledge_base_id=knowledge_base_id,
+            document_id=document_id,
+            original_filename=record.filename,
+        )
+
+        updated_record = update_document_record_status(
+            document_id,
+            "indexed",
+            chunk_count=chunk_count,
+        )
+
+        return asdict(updated_record)
+
+    except Exception:
+        logging.exception(
+            "Document re-indexing failed for document_id=%s",
+            document_id,
+        )
+
+        # Remove any partial new index to avoid inconsistent search results.
+        try:
+            remove_document_chunks(document_id)
+        except Exception:
+            logging.exception(
+                "Failed to clean up Chroma chunks after re-indexing "
+                "failure; document_id=%s",
+                document_id,
+            )
+
+        try:
+            update_document_record_status(
+                document_id,
+                "failed",
+                chunk_count=0,
+            )
+        except Exception:
+            logging.exception(
+                "Failed to update document status after re-indexing "
+                "failure; document_id=%s",
+                document_id,
+            )
+
+        raise HTTPException(
+            status_code=500,
+            detail="Document re-indexing failed; document is marked failed",
+        )
