@@ -30,6 +30,11 @@ alloy/
 data-alloy/
 chroma_db_backup_*/
 data/evaluation/results/latest_eval.json
+
+# Local knowledge-base registry
 data/knowledge_bases.sqlite3
 
+# Local knowledge-base documents
+data/test_kb/
 
+data/knowledge_base_documents/
