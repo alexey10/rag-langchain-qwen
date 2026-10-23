@@ -28,3 +28,26 @@ class ModelInfo(BaseModel):
 
 class ModelsResponse(BaseModel):
     models: List[ModelInfo]
+
+
+class KnowledgeBaseInfo(BaseModel):
+    id: str
+    name: str
+
+
+class KnowledgeBasesResponse(BaseModel):
+    knowledge_bases: List[KnowledgeBaseInfo]
+
+
+class DocumentInfo(BaseModel):
+    id: str
+    knowledge_base_id: str
+    filename: str
+    status: str
+    size_bytes: int
+    chunk_count: int
+    created_at: str
+
+
+class DocumentsResponse(BaseModel):
+    documents: List[DocumentInfo]

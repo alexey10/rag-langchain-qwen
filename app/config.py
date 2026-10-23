@@ -38,3 +38,17 @@ REWRITE_CACHE_ENABLED = (
 )
 
 DEEPVERIFIED_API_KEY = os.getenv("DEEPVERIFIED_API_KEY")
+
+KNOWLEDGE_BASE_DB_PATH = os.getenv(
+    "KNOWLEDGE_BASE_DB_PATH",
+    "data/knowledge_bases.sqlite3",
+)
+
+DOCUMENT_STORAGE_PATH = os.getenv(
+    "DOCUMENT_STORAGE_PATH",
+    "data/knowledge_base_documents",
+)
+
+MAX_DOCUMENT_UPLOAD_BYTES = int(
+    os.getenv("MAX_DOCUMENT_UPLOAD_BYTES", str(20 * 1024 * 1024))
+)
