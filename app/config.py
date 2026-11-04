@@ -4,7 +4,10 @@ from dotenv import load_dotenv
 load_dotenv()
 
 DATA_PATH = "data/docs"
-CHROMA_PATH = "chroma_db"
+CHROMA_PATH = os.getenv(
+    "CHROMA_PATH",
+    "chroma_db",
+)
 
 OLLAMA_HOST = os.getenv(
     "OLLAMA_HOST",

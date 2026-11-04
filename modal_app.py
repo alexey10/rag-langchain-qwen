@@ -5,6 +5,10 @@ import modal
 app = modal.App("deepverified-api")
 
 volume = modal.Volume.from_name("deepverified-models")
+data_volume = modal.Volume.from_name(
+    "deepverified-api-data",
+    create_if_missing=True,
+)
 
 image = (
     modal.Image.debian_slim()
@@ -20,13 +24,20 @@ image = (
 @app.cls(
     image=image,
     gpu="L4",
-    volumes={"/workspace/ollama": volume},
+    volumes={
+        "/workspace/ollama": volume,
+        "/workspace/data": data_volume,
+    },
     env={
         "OLLAMA_MODELS": "/workspace/ollama",
         "OLLAMA_HOST": "127.0.0.1:11434",
+        "CHROMA_PATH": "/workspace/data/chroma",
+        "KNOWLEDGE_BASE_DB_PATH": "/workspace/data/knowledge_bases.sqlite3",
+        "DOCUMENT_STORAGE_PATH": "/workspace/data/knowledge_base_documents",
     },
     secrets=[modal.Secret.from_name("deepverified-api-key")],
     scaledown_window=300,
+    max_containers=1,
     timeout=600,
 )
 class DeepVerifiedAPI:
@@ -88,10 +99,10 @@ class DeepVerifiedAPI:
                 "qwen3:latest",
                 "Reply with exactly OK",
             ],
-                check=True,
+            check=True,
         )
 
-    print("qwen3:latest is warm.")
+        print("qwen3:latest is warm.")
 
 
     @modal.asgi_app()
